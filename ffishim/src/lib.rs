@@ -11,7 +11,10 @@ struct Folder {
 mod folder;
 
 /// Spawns an implementation of `from` from the original struct to the ffishim one.
-struct From;
+struct From {
+    name: Option<Ident>,
+    receiver: Option<Ident>,
+}
 mod from;
 
 /// Spawns an implementation of `try_into` from the ffishim struct to the original one.
