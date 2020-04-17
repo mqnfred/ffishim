@@ -62,7 +62,6 @@ macro_rules! extend_syn_node {
     };
 }
 
-/*
 extend_syn_node! {
     Type => fn into_subtype(self) -> Type {
         let segments = self.into_typepath_path().segments;
@@ -99,7 +98,6 @@ extend_syn_node! {
         }
     }
 }
-*/
 
 extend_syn_node! {
     Ident => fn prefix(self, prefix: &str) -> Ident {

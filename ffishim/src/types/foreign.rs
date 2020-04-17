@@ -1,16 +1,14 @@
 use ::syn::*;
-use crate::helpers::*;
 
-/// The std lib's `Result` type behavior.
+/// Any unknown type's behavior, assumed to implement an ffi shim.
+///
+/// If a type is unknown (meaning it did not match any pre-defined `Behavior`,) we consider it by
+/// default to be a `Custom` type: a type defined by the user that itself implements the ffi shim.
 pub struct Behavior;
 
 impl super::Behavior for Behavior {
-    fn is(&self, sty: &Type) -> bool {
-        if let Type::Path(tp) = sty {
-            is_same_id(&tp.path, "Result")
-        } else {
-            false
-        }
+    fn is(&self, _: &Type) -> bool {
+        true
     }
 
     fn fold(&self, _: Type) -> Type { panic!("result fold not implemented"); }

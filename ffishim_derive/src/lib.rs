@@ -4,11 +4,16 @@ use ::darling::FromDeriveInput;
 
 #[proc_macro_derive(FFIShim, attributes(ffishim))]
 pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenStream {
-    let di = ::syn::parse_macro_input!(stream as ::syn::DeriveInput);
-    let shim = ::ffishim::Data::from_derive_input(&di).unwrap();
-    let from = ::ffishim::From::from(&shim);
-    //let try_into = ::ffishim::TryInto::from(&shim);
-    (::quote::quote! { #shim #from }).into()
+    let derive_input = ::syn::parse_macro_input!(stream as ::syn::DeriveInput);
+
+    let shim_data = ::ffishim::Data::from_derive_input(&derive_input).unwrap();
+    let shim_from = ::ffishim::From::from(&shim_data);
+    //let shim_try_into = ::ffishim::TryInto::from(&shim_data);
+
+    (::quote::quote! {
+        #shim_data
+        #shim_from
+    }).into()
 }
 
 #[proc_macro_attribute]
@@ -16,8 +21,13 @@ pub fn ffishim(
     _: ::proc_macro::TokenStream,
     stream: ::proc_macro::TokenStream,
 ) -> ::proc_macro::TokenStream {
-    let original: ::proc_macro2::TokenStream = stream.clone().into();
-    let ifn = ::syn::parse_macro_input!(stream as ::syn::ItemFn);
-    let shim = ::ffishim::Function::from_item_fn(&ifn).unwrap();
-    (::quote::quote! { #original #shim }).into()
+    let original_function: ::proc_macro2::TokenStream = stream.clone().into();
+
+    let item_fn = ::syn::parse_macro_input!(stream as ::syn::ItemFn);
+    let shim_function = ::ffishim::Function::from_item_fn(&item_fn);
+
+    (::quote::quote! {
+        #original_function
+        #shim_function
+    }).into()
 }

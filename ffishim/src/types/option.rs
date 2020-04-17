@@ -1,16 +1,11 @@
 use ::syn::*;
-use crate::helpers::*;
 
-/// The std lib's `Result` type behavior.
+/// The std lib's `Option` type behavior.
 pub struct Behavior;
 
 impl super::Behavior for Behavior {
-    fn is(&self, sty: &Type) -> bool {
-        if let Type::Path(tp) = sty {
-            is_same_id(&tp.path, "Result")
-        } else {
-            false
-        }
+    fn is(&self, _: &Type) -> bool {
+        false
     }
 
     fn fold(&self, _: Type) -> Type { panic!("result fold not implemented"); }

@@ -7,7 +7,7 @@ impl crate::Field {
             vis: self.vis.clone(),
             ident: self.ident.clone(),
             colon_token: None,
-            ty: crate::switch(&self.ty).fold(self.ty.clone()),
+            ty: crate::types::switch(&self.ty).fold(self.ty.clone()),
         }
     }
 
@@ -27,7 +27,7 @@ impl crate::Field {
             }
         };
 
-        crate::switch(&self.ty).from(expr)
+        crate::types::switch(&self.ty).from(expr)
     }
 }
 
