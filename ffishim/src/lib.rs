@@ -1,5 +1,65 @@
+#[macro_use]
+extern crate darling;
+#[macro_use]
+extern crate lazy_static;
+extern crate proc_macro2;
+
+#[derive(Debug, FromDeriveInput)]
+#[darling(attributes(ffishim), map = "Data::initialize")]
+pub struct Data {
+    #[darling(default)]
+    constructor: Option<::syn::Path>,
+    #[darling(default)]
+    opaque: bool,
+
+    ident: ::syn::Ident,
+    data: ::darling::ast::Data<Variant, Field>,
+}
+mod data;
+
+#[derive(Debug, FromField)]
+#[darling(attributes(ffishim))]
+pub struct Field {
+    ident: Option<::syn::Ident>,
+    vis: ::syn::Visibility,
+    ty: ::syn::Type,
+}
+mod field;
+
+#[derive(Debug, FromVariant)]
+#[darling(attributes(ffishim))]
+pub struct Variant {
+    #[darling(default)]
+    constructor: Option<::syn::Path>,
+
+    ident: ::syn::Ident,
+    fields: ::darling::ast::Fields<Field>,
+}
+mod variant;
+
+#[derive(Debug)]
+pub struct Function {
+    ident: ::syn::Ident,
+    args: Vec<::syn::FnArg>,
+    ret: ::syn::ReturnType,
+}
+mod function;
+
+pub struct From {
+    orig_name: ::syn::Ident,
+    ffi_name: ::syn::Ident,
+    receiver: ::syn::Expr,
+    init_expr: ::syn::Expr,
+}
+mod from;
+
+pub struct TryInto {
+    
+}
+mod try_into;
+
+/*
 #![feature(vec_into_raw_parts)]
-#[macro_use] extern crate lazy_static;
 
 use ::syn::*;
 
@@ -36,6 +96,7 @@ pub struct Outcome<T> {
     pub payload: *mut T,
 }
 mod libffishim;
+*/
 
 /// The behavior of a `Type` as needed by this crate.
 ///
@@ -44,17 +105,17 @@ mod libffishim;
 /// `try_into` generates a `Expr` that transforms an object from the original into its ffishim.
 /// `from` generates a `Expr` that transforms an object from its ffishim into the original.
 trait TypeBehavior: Sync {
-    fn is(&self, sty: &Type) -> bool;
-    fn fold(&self, sty: Type) -> Type;
-    fn try_into(&self, name: Expr) -> Expr;
-    fn from(&self, name: Expr) -> Expr;
+    fn is(&self, sty: &::syn::Type) -> bool;
+    fn fold(&self, sty: ::syn::Type) -> ::syn::Type;
+    fn try_into(&self, name: ::syn::Expr) -> ::syn::Expr;
+    fn from(&self, name: ::syn::Expr) -> ::syn::Expr;
 }
 /// Switch over a given `Type` and return the associated `Type` behavior.
 ///
 /// This is an open-ended, c-style switch: if two different type behaviors' `is` method returns
 /// true, the first one in the list will win. You can order the type behaviors in the
 /// `types::BEHAVIORS` vector.
-fn switch<'a, 'b>(sty: &'a Type) -> &'b Box<dyn TypeBehavior> {
+fn switch<'a, 'b>(sty: &'a ::syn::Type) -> &'b Box<dyn TypeBehavior> {
     // TODO: give more context about which type we do not find the behavior of
     types::BEHAVIORS.iter().find(|tyb| tyb.is(sty)).expect("cannot find behavior for given type")
 }

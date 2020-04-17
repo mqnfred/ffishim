@@ -62,6 +62,7 @@ macro_rules! extend_syn_node {
     };
 }
 
+/*
 extend_syn_node! {
     Type => fn into_subtype(self) -> Type {
         let segments = self.into_typepath_path().segments;
@@ -98,9 +99,44 @@ extend_syn_node! {
         }
     }
 }
+*/
 
 extend_syn_node! {
     Ident => fn prefix(self, prefix: &str) -> Ident {
         Ident::new(&format!("{}{}", prefix, self), self.span())
     }
+}
+
+pub fn idx_to_name(idx: u32) -> ::syn::Ident {
+    match idx {
+        0 => new_ident("zero"),
+        1 => new_ident("one"),
+        2 => new_ident("two"),
+        3 => new_ident("three"),
+        4 => new_ident("four"),
+        5 => new_ident("five"),
+        6 => new_ident("six"),
+        7 => new_ident("seven"),
+        8 => new_ident("eight"),
+        9 => new_ident("nine"),
+        10 => new_ident("ten"),
+        11 => new_ident("eleven"),
+        12 => new_ident("twelve"),
+        13 => new_ident("thirteen"),
+        14 => new_ident("fourteen"),
+        15 => new_ident("fifteen"),
+        16 => new_ident("sixteen"),
+        17 => new_ident("seventeen"),
+        18 => new_ident("eighteen"),
+        19 => new_ident("nineteen"),
+        _ => panic!("does not support more than 20 tuple struct fields"),
+    }
+}
+
+pub fn new_ident(src: &str) -> Ident {
+    Ident::new(src, ::proc_macro2::Span::call_site())
+}
+
+pub fn is_same_id(path: &Path, id: &str) -> bool {
+    id == &path.segments.last().expect("always >1 segments").ident.to_string()
 }
