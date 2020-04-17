@@ -1,12 +1,8 @@
-impl<T, E: ::std::error::Error> From<Result<T, E>> for super::Outcome<T> {
-    fn from(res: Result<T, E>) -> Self {
+impl<T> From<Result<T, super::anyhow::Error>> for super::Outcome<T> {
+    fn from(res: Result<T, super::anyhow::Error>) -> Self {
         match res {
             Ok(t) => Self::success(t),
-            Err(err) => Self {
-                errorcode: 1,
-                message: ::std::ffi::CString::new(err.to_string()).unwrap().into_raw(),
-                payload: ::std::ptr::null_mut(),
-            },
+            Err(err) => Self::error(err),
         }
     }
 }
@@ -20,7 +16,7 @@ impl<T> super::Outcome<T> {
         }
     }
 
-    pub fn error(err: impl ::std::error::Error) -> Self {
+    pub fn error(err: ::anyhow::Error) -> Self {
         Self{
             errorcode: 1,
             message: ::std::ffi::CString::new(err.to_string()).unwrap().into_raw(),
