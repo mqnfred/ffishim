@@ -10,7 +10,7 @@ tests/%/success: tests/%/expected_output tests/%/actual_output
 tests/%/actual_output: tests/%/a.out
 	$< > $@
 
-tests/%/a.out: tests/%/main.c target/debug/lib%.a
+tests/%/a.out: tests/%/main.c target/debug/lib%.a tests/helpers.h
 	gcc -Wall -g -Os -o $@ $(word 1,$^) $(word 2,$^) -ldl -lm -pthread
 
 target/debug/lib%.a: tests/%/src/lib.rs tests/%/Cargo.toml $(FFISHIM_SRC)

@@ -5,9 +5,17 @@
 
 extern outcome_t *ffi_add_i64(int64_t a, int64_t b);
 extern outcome_t *ffi_add_f64(double a, float b);
+extern outcome_t *ffi_fails(int64_t a);
 
 int main() {
 	printo("ffi_add_i64(1, 3) = ", "%ld", int64_t, ffi_add_i64(1, 3));
+	printo("ffi_add_i64(-51, 3) = ", "%ld", int64_t, ffi_add_i64(-51, 3));
+	separator;
 	printo("ffi_add_f64(1.2, 3.5) = ", "%lf", double, ffi_add_f64(1.2, 3.5));
+	printo("ffi_add_f64(-1.2, 3.5) = ", "%lf", double, ffi_add_f64(-1.2, 3.5));
+	separator;
+	printo("ffi_fails(5) = ", "%ld", int64_t, ffi_fails(5));
+	printo("ffi_fails(4) = ", "%ld", int64_t, ffi_fails(4));
+
 	return 0;
 }

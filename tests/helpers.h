@@ -8,10 +8,12 @@
 	if (outcome == NULL) { \
 		printf("outcome is NULL\n"); \
 	} else if (outcome->errorcode != 0) { \
-		printf(prefix "%ld %s\n", outcome->errorcode, outcome->message); \
+		printf(prefix "code=%ld, %s\n", outcome->errorcode, outcome->message); \
 	} else { \
 		printf(prefix format "\n", *(return_type*)outcome->payload);\
 	} \
 }
+
+#define separator printf("---\n");
 
 #endif // FFISHIM_TESTS_HELPERS
