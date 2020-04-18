@@ -13,12 +13,13 @@
 //! |`Option<T>`|`*mut T`|
 //! |`Vec<T>`|`ffishim::library::Array<T>`|
 //! |`Result<T, E>`|`ffishim::library::Outcome<T>`|
+//! |`bool`|`libc::c_int`|
+//! |`char`|`libc::c_char`|
 //!
 //! And below a list of all the scalar types handled (see the `Scalars` behavior for more details.)
 //!
 //! |Scalar types|FFI equivalent|
 //! |---|---|
-//! |`char`|`libc::c_char`|
 //! |`f32`|`libc::c_float`|
 //! |`f64`|`libc::c_double`|
 //! |`u8`|`libc::c_char`|

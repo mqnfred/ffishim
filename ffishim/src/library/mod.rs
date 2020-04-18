@@ -7,7 +7,8 @@
 //! dependency of their programs.
 
 pub extern crate libc;
-pub extern crate anyhow;
+extern crate anyhow;
+pub use anyhow::Error;
 
 /// A C-compatible array structure to replace rust's `Vec` in the shim layer.
 #[repr(C)]

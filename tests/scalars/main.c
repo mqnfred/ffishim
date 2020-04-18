@@ -3,10 +3,11 @@
 #include "../../ffishim/src/library/header.h"
 #include "../helpers.h"
 
-extern outcome_t* ffi_add(int64_t a, int64_t b);
+extern outcome_t *ffi_add_i64(int64_t a, int64_t b);
+extern outcome_t *ffi_add_f64(double a, float b);
 
 int main() {
-	outcome_t *add_result = ffi_add(1, 3);
-	printf("ffi_add(1, 3) = %ld\n", *((int64_t*)(add_result->payload)));
+	printo("ffi_add_i64(1, 3) = ", "%ld", int64_t, ffi_add_i64(1, 3));
+	printo("ffi_add_f64(1.2, 3.5) = ", "%lf", double, ffi_add_f64(1.2, 3.5));
 	return 0;
 }

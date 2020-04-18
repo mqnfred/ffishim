@@ -2,12 +2,11 @@ use ::once_cell::sync::Lazy;
 use ::std::collections::HashMap;
 use ::syn::*;
 
-/// Builtin scalar behaviors: `char`, `f32`, `u32`, ...
+/// Builtin scalar behaviors: `f32`, `u32`, ...
 ///
 /// The behavior for different scalars is shared into this object. Here is the list of scalars and
 /// their libc equivalents:
 ///
-///  - `char` -> `c_char`
 ///  - `f32` -> `c_float`
 ///  - `f64` -> `c_double`
 ///  - `u8` -> `c_char`
@@ -24,7 +23,6 @@ pub struct Behavior;
 
 static NUMBER_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
-    m.insert("char", "::ffishim::library::libc::c_char");
     m.insert("f32", "::ffishim::library::libc::c_float");
     m.insert("f64", "::ffishim::library::libc::c_double");
     m.insert("u8", "::ffishim::library::libc::c_char");
