@@ -13,17 +13,17 @@ int main() {
 	free(*(void**)(outcome_1->payload));
 	free_outcome(outcome_1);
 
+	SEPARATOR;
+
 	char *str = malloc(sizeof(char)*4);
-	str[0] = 'b';
-	str[1] = 'a';
-	str[2] = 'e';
+	str[0] = 'f';
+	str[1] = 'f';
+	str[2] = 'i';
 	str[3] = '\0';
 	outcome_t *outcome_2 = ffi_take_string(str);
-	PRINTO("ffi_take_string(\"bae\") = ", "%s", const char*, outcome_2);
+	PRINTO("ffi_take_string(\"ffi\") = ", "%s", const char*, outcome_2);
 	free(*(void**)(outcome_2->payload));
 	free_outcome(outcome_2);
-
-	SEPARATOR;
 
 	return 0;
 }

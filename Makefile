@@ -2,6 +2,9 @@ FFISHIM_SRC = $(shell find ffishim ffishim_derive -type f)
 TESTS = $(patsubst %,%/success,$(shell find tests -mindepth 1 -maxdepth 1 -type d))
 
 all: $(TESTS)
+	@echo "-----------------------------"
+	@echo "--- All tests successful! ---"
+	@echo "-----------------------------"
 
 tests/%/success: tests/%/expected_output tests/%/actual_output
 	diff $^

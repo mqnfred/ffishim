@@ -15,7 +15,8 @@ impl super::Behavior for Behavior {
 
     fn fold(&self, sty: Type) -> Type {
         let subtype = sty.into_subtype();
-        parse_quote! { *mut #subtype }
+        let ffi_subtype = crate::types::switch(&subtype).fold(subtype);
+        parse_quote! { *mut #ffi_subtype }
     }
 
     fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
