@@ -2,5 +2,6 @@
 members = [
 	"ffishim",
 	"ffishim_derive",
-	"testing",
+
+	"tests/scalars",
 ]
