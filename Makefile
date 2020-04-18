@@ -15,7 +15,7 @@ tests/%/a.out: tests/%/main.c target/debug/lib%.a
 		-Ltarget/debug \
 		-l$(patsubst target/debug/lib%.a,%,$(word 2,$^))
 
-target/debug/lib%.a: tests/%/src/lib.rs $(FFISHIM_SRC)
+target/debug/lib%.a: tests/%/src/lib.rs tests/%/Cargo.toml $(FFISHIM_SRC)
 	cargo build --package $(patsubst target/debug/lib%.a,%,$@)
 
 clean:
