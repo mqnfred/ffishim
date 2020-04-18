@@ -1,0 +1,3 @@
+ffi_give_string() = Hello, world!
+ffi_take_string("bae") = Hello, bae!
+---

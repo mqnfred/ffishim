@@ -53,13 +53,11 @@ pub struct From {
 }
 mod from;
 
-pub struct TryInto {
-    
-}
+pub struct TryInto {}
 mod try_into;
 
-pub mod types;
 pub mod library;
+pub mod types;
 
 /// Macros to extend the `syn` tree and other useful shortcuts.
 #[macro_use]

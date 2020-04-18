@@ -25,8 +25,7 @@ mod array;
 ///  - A failure outcome is defined by a non-0 errorcode and a non-NULL `message`.
 #[repr(C)]
 pub struct Outcome<T> {
-    pub errorcode: i64,
-    pub message: *mut ::libc::c_char,
+    pub error: *mut ::libc::c_char,
     pub payload: *mut T,
 }
 mod outcome;

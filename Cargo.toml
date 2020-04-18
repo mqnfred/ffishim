@@ -4,4 +4,5 @@ members = [
 	"ffishim_derive",
 
 	"tests/scalars",
+	"tests/strings",
 ]

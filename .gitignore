@@ -1,5 +1,5 @@
-/target
-/Cargo.lock
+target
+Cargo.lock
 a.out
 actual_output
 success

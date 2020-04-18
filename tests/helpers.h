@@ -3,17 +3,26 @@
 
 #include <stdio.h>
 
-#define printo(prefix, format, return_type, call) { \
+#define PRINTO(prefix, format, return_type, call) { \
 	outcome_t *outcome = call; \
 	if (outcome == NULL) { \
 		printf("outcome is NULL\n"); \
-	} else if (outcome->errorcode != 0) { \
-		printf(prefix "code=%ld, %s\n", outcome->errorcode, outcome->message); \
+	} else if (outcome->message != NULL) { \
+		printf(prefix "%s\n", outcome->message); \
 	} else { \
 		printf(prefix format "\n", *(return_type*)outcome->payload);\
 	} \
 }
 
-#define separator printf("---\n");
+#define SEPARATOR printf("---\n");
+
+void free_outcome(outcome_t *outcome) {
+	if (outcome->message != NULL) {
+		free(outcome->message);
+	} else {
+		free(outcome->payload);
+	}
+	free(outcome);
+}
 
 #endif // FFISHIM_TESTS_HELPERS

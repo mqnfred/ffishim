@@ -8,7 +8,7 @@ tests/%/success: tests/%/expected_output tests/%/actual_output
 	touch $@
 
 tests/%/actual_output: tests/%/a.out
-	$< > $@
+	valgrind --leak-check=full $< > $@
 
 tests/%/a.out: tests/%/main.c target/debug/lib%.a tests/helpers.h
 	gcc -Wall -g -Os -o $@ $(word 1,$^) $(word 2,$^) -ldl -lm -pthread

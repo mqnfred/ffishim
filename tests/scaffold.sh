@@ -22,15 +22,31 @@ crate-type = ["staticlib"]
 EOF
 
 cat > ${dir}/main.c <<EOF
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "../../ffishim/src/library/header.h"
+#include "../helpers.h"
 
 int main() {
-	printf("test passes: %d\\n", 1);
+	PRINTO("ffi_add(1, 3) = ", "%ld", int64_t, ffi_add(1, 3));
+	SEPARATOR;
+
 	return 0;
 }
 EOF
 
+cat > ${dir}/src/lib.rs <<EOF
+#[macro_use]
+extern crate ffishim_derive;
+
+#[ffishim]
+fn add(a: i64, b: i64) -> i64 {
+    a + b
+}
+EOF
+
 cat > ${dir}/expected_output <<EOF
-test passes: 1
+ffi_add(1, 3) = 4
+---
 EOF

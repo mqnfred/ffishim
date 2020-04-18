@@ -10,16 +10,14 @@ impl<T> From<Result<T, super::anyhow::Error>> for super::Outcome<T> {
 impl<T> super::Outcome<T> {
     pub fn success(payload: T) -> Self {
         Self {
-            errorcode: 0,
-            message: ::std::ptr::null_mut(),
+            error: ::std::ptr::null_mut(),
             payload: Box::into_raw(Box::new(payload)),
         }
     }
 
     pub fn error(err: ::anyhow::Error) -> Self {
         Self{
-            errorcode: 1,
-            message: ::std::ffi::CString::new(err.to_string()).unwrap().into_raw(),
+            error: ::std::ffi::CString::new(err.to_string()).unwrap().into_raw(),
             payload: ::std::ptr::null_mut(),
         }
     }
