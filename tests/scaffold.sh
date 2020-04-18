@@ -23,6 +23,7 @@ EOF
 
 cat > ${dir}/main.c <<EOF
 #include <stdio.h>
+#include <stdint.h>
 
 int main() {
 	printf("test passes: %d\\n", 1);

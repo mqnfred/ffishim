@@ -11,9 +11,7 @@ tests/%/actual_output: tests/%/a.out
 	$< > $@
 
 tests/%/a.out: tests/%/main.c target/debug/lib%.a
-	gcc -Wall -g -Os $(word 1,$^) -o $@ \
-		-Ltarget/debug \
-		-l$(patsubst target/debug/lib%.a,%,$(word 2,$^))
+	gcc -Wall -g -Os -o $@ $(word 1,$^) $(word 2,$^) -ldl -lm -pthread
 
 target/debug/lib%.a: tests/%/src/lib.rs tests/%/Cargo.toml $(FFISHIM_SRC)
 	cargo build --package $(patsubst target/debug/lib%.a,%,$@)

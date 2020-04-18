@@ -1,1 +1,1 @@
-test passes: 1
+ffi_add(1, 3) = 4
