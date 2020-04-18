@@ -7,18 +7,18 @@ use ::syn::*;
 /// The behavior for different scalars is shared into this object. Here is the list of scalars and
 /// their libc equivalents:
 ///
-///  - `f32` -> `c_float`
-///  - `f64` -> `c_double`
-///  - `u8` -> `c_char`
-///  - `u16` -> `c_ushort`
-///  - `u32` -> `c_uint`
-///  - `u64` -> `c_ulong`
-///  - `usize` -> `size_t`
-///  - `i8` -> `c_schar`
-///  - `i16` -> `c_short`
-///  - `i32` -> `c_int`
-///  - `i64` -> `c_long`
-///  - `isize` -> `ssize_t`
+///  - `f32`
+///  - `f64`
+///  - `u8`
+///  - `u16`
+///  - `u32`
+///  - `u64`
+///  - `usize`
+///  - `i8`
+///  - `i16`
+///  - `i32`
+///  - `i64`
+///  - `isize`
 pub struct Behavior;
 
 static NUMBER_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
