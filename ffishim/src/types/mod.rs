@@ -53,10 +53,10 @@ pub trait Behavior: Sync + Send {
     fn fold(&self, sty: ::syn::Type) -> ::syn::Type;
 
     /// Returns an `Expr`ession that mutates the shim type into the original one.
-    fn try_into(&self, name: ::syn::Expr) -> ::syn::Expr;
+    fn try_into(&self, sty: &::syn::Type, name: ::syn::Expr) -> ::syn::Expr;
 
     /// Returns an `Expr`ession that mutates the original type into its shim equivalent.
-    fn from(&self, name: ::syn::Expr) -> ::syn::Expr;
+    fn from(&self, sty: &::syn::Type, name: ::syn::Expr) -> ::syn::Expr;
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.

@@ -58,7 +58,7 @@ fn call_expr_from_item_fn(ifn: &::syn::ItemFn) -> ::syn::Expr {
     let convert_exprs = ifn.sig.inputs.iter().map(|arg| {
         if let ::syn::FnArg::Typed(pat) = arg {
             let arg_name = pat.unwrap_ident_as_expr();
-            crate::types::switch(&pat.ty).try_into(arg_name)
+            crate::types::switch(&pat.ty).try_into(&pat.ty, arg_name)
         } else {
             panic!("no receiver (self) supported in function signatures");
         }
@@ -77,12 +77,12 @@ fn call_expr_from_item_fn(ifn: &::syn::ItemFn) -> ::syn::Expr {
         if crate::types::Result.is(&sty) {
             let subtype = sty.clone().into_subtype();
             let receiver: ::syn::Expr = ::syn::parse_quote! { tmp };
-            let subexpr = crate::types::switch(&subtype).from(receiver.clone());
+            let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
             ::syn::parse_quote! {
                 ::ffishim::library::Outcome::from(#call_expr.map(|#receiver| #subexpr)).into_raw()
             }
         } else {
-            let call_expr = crate::types::switch(&sty).from(call_expr);
+            let call_expr = crate::types::switch(&sty).from(&sty, call_expr);
             ::syn::parse_quote! { ::ffishim::library::Outcome::success(#call_expr).into_raw() }
         }
     } else {

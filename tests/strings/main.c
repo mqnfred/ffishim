@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../ffishim/src/library/header.h"
+#include "../../ffishim/header.h"
 #include "../helpers.h"
 
 extern outcome_t *ffi_give_string();

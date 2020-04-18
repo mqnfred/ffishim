@@ -59,11 +59,11 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn try_into(&self, expr: Expr) -> Expr {
+    fn try_into(&self, _: &Type, expr: Expr) -> Expr {
         ::syn::parse_quote! { Ok(#expr) }
     }
 
-    fn from(&self, expr: Expr) -> Expr {
+    fn from(&self, _: &Type, expr: Expr) -> Expr {
         expr
     }
 }

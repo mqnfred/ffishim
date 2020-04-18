@@ -21,7 +21,7 @@ impl super::Behavior for Behavior {
         parse_quote! { *mut i8 }
     }
 
-    fn try_into(&self, expr: Expr) -> Expr {
+    fn try_into(&self, _: &Type, expr: Expr) -> Expr {
         parse_quote! {
             {
                 let tmp: Result<String, ::ffishim::library::Error> = unsafe {
@@ -34,7 +34,7 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn from(&self, expr: Expr) -> Expr {
+    fn from(&self, _: &Type, expr: Expr) -> Expr {
         parse_quote! {
             ::std::ffi::CString::new(
                 #expr

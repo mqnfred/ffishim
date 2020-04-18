@@ -11,7 +11,15 @@ impl super::Behavior for Behavior {
         true
     }
 
-    fn fold(&self, _: Type) -> Type { panic!("result fold not implemented"); }
-    fn try_into(&self, _: Expr) -> Expr { panic!("result try_into not implemented"); }
-    fn from(&self, _: Expr) -> Expr { panic!("result from not implemented"); }
+    fn fold(&self, _: Type) -> Type {
+        panic!("result fold not implemented");
+    }
+
+    fn try_into(&self, _: &Type, _: Expr) -> Expr {
+        panic!("result try_into not implemented");
+    }
+
+    fn from(&self, _: &Type, _: Expr) -> Expr {
+        panic!("result from not implemented");
+    }
 }

@@ -5,4 +5,5 @@ members = [
 
 	"tests/scalars",
 	"tests/strings",
+	"tests/options",
 ]

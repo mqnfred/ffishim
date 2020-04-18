@@ -27,7 +27,7 @@ impl crate::Field {
             }
         };
 
-        crate::types::switch(&self.ty).from(expr)
+        crate::types::switch(&self.ty).from(&self.ty, expr)
     }
 }
 
