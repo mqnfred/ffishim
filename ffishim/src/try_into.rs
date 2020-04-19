@@ -8,6 +8,7 @@ impl ::quote::ToTokens for crate::TryInto {
         let init_expr = &self.init_expr;
 
         tokens.extend(::quote::quote! {
+            use ::std::convert::TryInto as _;
             impl ::std::convert::TryInto<#orig_name> for #ffi_name {
                 type Error = ::ffishim::library::Error;
                 fn try_into(#receiver: #ffi_name) -> Result<#orig_name, Self::Error> {
@@ -25,14 +26,12 @@ impl<'a> From<&'a crate::Data> for crate::TryInto {
         let receiver: ::syn::Expr = ::syn::parse_quote! { self };
 
         let init_expr = match &data.data {
-            /*
             ::darling::ast::Data::Enum(variants) => enum_init_expr(
                 &::syn::parse_quote! { #orig_name },
                 &::syn::parse_quote! { #ffi_name },
                 &receiver,
                 variants,
             ),
-            */
             ::darling::ast::Data::Struct(fields) => struct_init_expr(
                 &::syn::parse_quote! { #orig_name },
                 &data.constructor,
@@ -46,7 +45,6 @@ impl<'a> From<&'a crate::Data> for crate::TryInto {
     }
 }
 
-/*
 fn enum_init_expr(
     orig_name: &::syn::Path,
     ffi_name: &::syn::Path,
@@ -58,7 +56,7 @@ fn enum_init_expr(
         let orig_variant_fullpath: ::syn::Path = ::syn::parse_quote! { #orig_name::#variant_name };
         let ffi_variant_fullpath: ::syn::Path = ::syn::parse_quote! { #ffi_name::#variant_name };
 
-        let init = struct_init_expr(&ffi_variant_fullpath, None, &v.fields);
+        let init = struct_init_expr(&orig_variant_fullpath, &v.constructor, None, &v.fields);
         let destructuring: Vec<::syn::Ident> = v.fields.iter().enumerate().map(|(idx, field)| {
             field.ident.clone().unwrap_or(idx_to_name(idx as u32))
         }).collect();
@@ -82,7 +80,6 @@ fn enum_init_expr(
         }
     }
 }
-*/
 
 fn struct_init_expr(
     orig_name: &::syn::Path,

@@ -1,4 +1,5 @@
 use ::syn::*;
+use crate::helpers::*;
 
 /// Any unknown type's behavior, assumed to implement an ffi shim.
 ///
@@ -11,15 +12,21 @@ impl super::Behavior for Behavior {
         true
     }
 
-    fn fold(&self, _: Type) -> Type {
-        panic!("result fold not implemented");
+    fn fold(&self, sty: Type) -> Type {
+        if let Type::Path(mut tp) = sty {
+            let seg = tp.path.segments.last_mut().expect(">0 segments");
+            seg.ident = seg.ident.clone().prefix("FFI");
+            Type::Path(tp)
+        } else {
+            panic!("only foreign types of type path supported");
+        }
     }
 
-    fn try_into(&self, _: &Type, _: Expr) -> Expr {
-        panic!("result try_into not implemented");
+    fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
+        parse_quote! {{ let t: Result<#sty, ::ffishim::library::Error> = #expr.try_into(); t }}
     }
 
-    fn from(&self, _: &Type, _: Expr) -> Expr {
-        panic!("result from not implemented");
+    fn from(&self, _: &Type, expr: Expr) -> Expr {
+        parse_quote! { #expr.into() }
     }
 }
