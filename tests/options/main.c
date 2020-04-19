@@ -55,7 +55,8 @@ int main() {
 	int *opt6 = malloc(sizeof(int32_t));
 	*opt6 = 5;
 	outcome_t *outcome_6 = ffi_option_result(opt6);
-	printf("*ffi_option_result(&5) = %d\n", *(int32_t**)outcome_6->payload);
+	printf("*ffi_option_result(&5) = %d\n", **(int32_t**)outcome_6->payload);
+	free(*(void**)outcome_6->payload);
 	free_outcome(outcome_6);
 
 	outcome_t *outcome_7 = ffi_option_result(NULL);
