@@ -6,3 +6,4 @@ ffi_add_f64(-1.2, 3.5) = 2.300000
 ---
 ffi_fails(5) = 6
 ffi_fails(4) = only 5 accepted
+---

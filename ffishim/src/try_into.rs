@@ -38,7 +38,6 @@ impl<'a> From<&'a crate::Data> for crate::TryInto {
                 Some(&receiver),
                 fields,
             ),
-            _ => panic!("enum not supported"),
         };
 
         Self{orig_name, ffi_name, receiver, init_expr}
@@ -69,7 +68,7 @@ fn enum_init_expr(
                 #ffi_variant_fullpath{#(#destructuring),*} => #init
             },
             ::darling::ast::Style::Unit => ::syn::parse_quote! {
-                #ffi_variant_fullpath => #orig_variant_fullpath,
+                #ffi_variant_fullpath => Ok(#orig_variant_fullpath),
             },
         }
     }).collect();
