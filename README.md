@@ -12,6 +12,8 @@ Generate a thin FFI layer for your rust API using procedural macros.
  - [ ] Foreign type behavior
 
  - [ ] Should `from` become `try_from`? (invalid rust string -> CString unsafe)
+ - [ ] Reconsider ffishim's `Error` type (anyhow? trait? ...)
+ - [ ] Figure out `Array` initialization from C caller
 
 ### Testing
 

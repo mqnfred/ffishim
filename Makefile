@@ -1,5 +1,5 @@
-FFISHIM_SRC = $(shell find ffishim ffishim_derive -type f)
 TESTS = $(patsubst %,%/success,$(shell find tests -mindepth 1 -maxdepth 1 -type d))
+FFISHIM_SRC = $(shell find ffishim ffishim_derive -type f)
 
 all: $(TESTS)
 	@echo "-----------------------------"
