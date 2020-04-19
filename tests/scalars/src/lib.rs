@@ -19,3 +19,19 @@ fn fails(a: i64) -> Result<i64, ::ffishim::library::Error> {
         Err(::ffishim::library::Error::msg("only 5 accepted"))
     }
 }
+
+#[derive(FFIShim)]
+pub struct GPS {
+    lat: f64,
+    lon: f64,
+    planet: Option<u64>,
+}
+
+#[ffishim]
+fn milk_pail_market() -> GPS {
+    GPS {
+        lat: 37.405263,
+        lon: -122.109926,
+        planet: None,
+    }
+}

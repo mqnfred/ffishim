@@ -8,6 +8,12 @@ extern outcome_t *ffi_add_i64(int64_t a, int64_t b);
 extern outcome_t *ffi_add_f64(double a, float b);
 extern outcome_t *ffi_fails(int64_t a);
 
+typedef struct gps {
+	double lat;
+	double lon;
+	int64_t *planet;
+} gps_t;
+
 int main() {
 	outcome_t *outcome_1 = ffi_add_i64(1, 3);
 	PRINTO("ffi_add_i64(1, 3) = ", "%ld", int64_t, outcome_1);

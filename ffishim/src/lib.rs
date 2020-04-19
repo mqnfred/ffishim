@@ -53,7 +53,12 @@ pub struct From {
 }
 mod from;
 
-pub struct TryInto {}
+pub struct TryInto {
+    orig_name: ::syn::Ident,
+    ffi_name: ::syn::Ident,
+    receiver: ::syn::Expr,
+    init_expr: ::syn::Expr,
+}
 mod try_into;
 
 pub mod library;
