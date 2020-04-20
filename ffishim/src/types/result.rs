@@ -13,15 +13,44 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn fold(&self, _: Type) -> Type {
-        panic!("result fold not implemented");
+    fn fold(&self, sty: Type) -> Type {
+        let subtype = sty.into_subtype();
+        let subtype = crate::types::switch(&subtype).fold(subtype);
+        parse_quote! { *mut ::ffishim::library::Outcome<#subtype> }
     }
 
     fn try_into(&self, _: &Type, _: Expr) -> Expr {
-        panic!("result try_into not implemented");
+        panic!("cannot pass results/outcomes as arguments");
     }
 
-    fn from(&self, _: &Type, _: Expr) -> Expr {
-        panic!("result from not implemented");
+    fn from(&self, sty: &Type, expr: Expr) -> Expr {
+        let subtype = sty.clone().into_subtype();
+        let receiver: ::syn::Expr = ::syn::parse_quote! { tmp };
+        let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
+        ::syn::parse_quote! {
+            ::ffishim::library::Outcome::from(#expr.map(|#receiver| #subexpr)).into_raw()
+        }
+    }
+}
+
+impl Behavior {
+    /// Returns an expression that tries to unpack a `Result`.
+    ///
+    /// Upon failure, returns *directly* an errorfull `Outcome`. Can be used to unpack arguments in
+    /// a ffi wrapper that returns an `Outcome`.
+    pub fn try_or_outcome(&self, expr: Expr) -> Expr {
+        ::syn::parse_quote! {
+            match #expr {
+                Ok(tmp) => tmp,
+                Err(err) => return ::ffishim::library::Outcome::error(err).into_raw(),
+            }
+        }
+    }
+
+    /// Returns an expression that wraps the given `expr` into an `Outcome` that is always
+    /// successful.
+    pub fn wrap_success(&self, sty: &Type, expr: Expr) -> Expr {
+        let expr = crate::types::switch(&sty).from(&sty, expr);
+        ::syn::parse_quote! { ::ffishim::library::Outcome::success(#expr).into_raw() }
     }
 }

@@ -39,18 +39,17 @@ fn arg_to_ffi_arg(arg: &::syn::FnArg) -> ::syn::FnArg {
 }
 
 fn output_to_ffi_output(output: &::syn::ReturnType) -> ::syn::ReturnType {
-    if let ::syn::ReturnType::Type(_, sty) = output {
+    let sty = if let ::syn::ReturnType::Type(_, sty) = output {
         if crate::types::Result.is(&sty) {
-            let subtype = sty.clone().into_subtype();
-            let subtype = crate::types::switch(&subtype).fold(subtype);
-            ::syn::parse_quote! { -> *mut ::ffishim::library::Outcome<#subtype> }
+            crate::types::Result.fold(*sty.clone())
         } else {
-            let sty = crate::types::switch(&sty).fold(*sty.clone());
-            ::syn::parse_quote! { -> *mut ::ffishim::library::Outcome<#sty> }
+            crate::types::Result.fold(::syn::parse_quote! { Result<#sty, ::ffishim::library::Error> })
         }
     } else {
-        ::syn::parse_quote! { -> *mut ::ffishim::library::Outcome<()> }
-    }
+        crate::types::Result.fold(::syn::parse_quote! { Result<(), ::ffishim::library::Error> })
+    };
+
+    ::syn::parse_quote! { -> #sty }
 }
 
 fn call_expr_from_item_fn(ifn: &::syn::ItemFn) -> ::syn::Expr {
@@ -58,34 +57,22 @@ fn call_expr_from_item_fn(ifn: &::syn::ItemFn) -> ::syn::Expr {
     let convert_exprs = ifn.sig.inputs.iter().map(|arg| {
         if let ::syn::FnArg::Typed(pat) = arg {
             let arg_name = pat.unwrap_ident_as_expr();
-            crate::types::switch(&pat.ty).try_into(&pat.ty, arg_name)
+            let expr = crate::types::switch(&pat.ty).try_into(&pat.ty, arg_name);
+            crate::types::Result.try_or_outcome(expr)
         } else {
             panic!("no receiver (self) supported in function signatures");
         }
     });
 
-    let call_expr: ::syn::Expr = ::syn::parse_quote! {
-        #orig_name(
-            #(match #convert_exprs {
-                Ok(tmp) => tmp,
-                Err(err) => return ::ffishim::library::Outcome::error(err).into_raw(),
-            }),*
-        )
-    };
+    let call_expr: ::syn::Expr = ::syn::parse_quote! { #orig_name(#(#convert_exprs),*) };
 
     if let ::syn::ReturnType::Type(_, sty) = &ifn.sig.output {
         if crate::types::Result.is(&sty) {
-            let subtype = sty.clone().into_subtype();
-            let receiver: ::syn::Expr = ::syn::parse_quote! { tmp };
-            let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
-            ::syn::parse_quote! {
-                ::ffishim::library::Outcome::from(#call_expr.map(|#receiver| #subexpr)).into_raw()
-            }
+            crate::types::Result.from(sty, call_expr)
         } else {
-            let call_expr = crate::types::switch(&sty).from(&sty, call_expr);
-            ::syn::parse_quote! { ::ffishim::library::Outcome::success(#call_expr).into_raw() }
+            crate::types::Result.wrap_success(sty, call_expr)
         }
     } else {
-        ::syn::parse_quote! { { #call_expr; ::ffishim::library::Outcome::success(()).into_raw() } }
+        crate::types::Result.wrap_success(&::syn::parse_quote! { () }, call_expr)
     }
 }
