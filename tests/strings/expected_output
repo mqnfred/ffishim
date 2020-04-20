@@ -1,3 +1,2 @@
-ffi_give_string() = Hello, world!
----
-ffi_take_string("ffi") = Hello, ffi!
+Hello, world!
+Hello, ffi!

@@ -30,3 +30,18 @@ impl<T> super::Outcome<T> {
         unsafe { *Box::from_raw(input) }
     }
 }
+
+#[no_mangle]
+pub extern "C" fn free_outcome(outcome: *mut super::Outcome<u64>) {
+    if !outcome.is_null() {
+        let outcome = *unsafe { Box::from_raw(outcome) };
+
+        if !outcome.error.is_null() {
+            unsafe { ::std::ffi::CString::from_raw(outcome.error) };
+        }
+
+        if !outcome.payload.is_null() {
+            unsafe { Box::from_raw(outcome.payload) };
+        }
+    }
+}

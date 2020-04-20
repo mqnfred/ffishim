@@ -1,11 +1,10 @@
-ffi_give_option() = 0x5868040
-*ffi_give_option() = 28
+28
 ---
-ffi_take_option(&5) = (nil)
-ffi_take_option(NULL) = 32
+(nil)
+32
 ---
-*ffi_string_option(&"ffi") = Hello, ffi!
-ffi_string_option(NULL) = (nil)
+(nil)
+Hello, ffi!
 ---
-*ffi_option_result(&5) = 6
-ffi_option_result(NULL) = no input
+6
+error: no input
