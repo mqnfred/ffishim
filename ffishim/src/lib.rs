@@ -62,6 +62,10 @@ pub struct TryInto {
 mod try_into;
 
 pub struct Free {
+    func_name: ::syn::Ident,
+    receiver: ::syn::Expr,
+    ffi_type: ::syn::Type,
+    free_expr: ::syn::Expr,
 }
 mod free;
 

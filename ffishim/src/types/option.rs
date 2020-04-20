@@ -52,4 +52,18 @@ impl super::Behavior for Behavior {
             }
         }
     }
+
+    fn free(&self, sty: &Type, expr: Expr) -> Option<Expr> {
+        let receiver: Expr = parse_quote! { tmp };
+        let subtype = sty.clone().into_subtype();
+        let subexpr = crate::types::switch(&subtype).free(&subtype, receiver.clone());
+
+        Some(parse_quote! {{
+            let tmp = #expr;
+            if !tmp.is_null() {
+                let #receiver = *unsafe { Box::from_raw(tmp) };
+                #subexpr;
+            }
+        }})
+    }
 }

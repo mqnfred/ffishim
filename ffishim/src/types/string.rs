@@ -41,4 +41,13 @@ impl super::Behavior for Behavior {
             ).expect("bad rust string sent through ffi shim").into_raw()
         }
     }
+
+    fn free(&self, _: &Type, expr: Expr) -> Option<Expr> {
+        Some(parse_quote! {{
+            let tmp = #expr;
+            if !tmp.is_null() {
+                unsafe { ::std::ffi::CString::from_raw(tmp) };
+            }
+        }})
+    }
 }

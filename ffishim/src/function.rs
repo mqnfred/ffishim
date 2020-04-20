@@ -31,9 +31,10 @@ impl crate::Function {
 fn arg_to_ffi_arg(arg: &::syn::FnArg) -> ::syn::FnArg {
     match arg {
         ::syn::FnArg::Receiver(_) => panic!("self receiver not handled in functions"),
-        ::syn::FnArg::Typed(pat) => ::syn::FnArg::Typed(::syn::PatType{
-            ty: Box::new(crate::types::switch(&pat.ty).fold(*pat.ty.clone())),
-            ..pat.clone()
+        ::syn::FnArg::Typed(patty) => ::syn::FnArg::Typed(::syn::PatType{
+            pat: Box::new(*patty.pat.clone()),
+            ty: Box::new(crate::types::switch(&patty.ty).fold(*patty.ty.clone())),
+            ..patty.clone()
         }),
     }
 }

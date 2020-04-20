@@ -25,18 +25,26 @@ impl super::Behavior for Behavior {
     fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
         parse_quote! {{
             let tmp = #expr;
-            let tmp = if tmp.is_null() {
+            if tmp.is_null() {
                 Err(::ffishim::library::Error::msg("uninitialized struct"))
             } else {
                 let tmp = *unsafe { Box::from_raw(tmp) };
                 let tmp: Result<#sty, ::ffishim::library::Error> = tmp.try_into();
                 tmp
             }
-
         }}
     }
 
     fn from(&self, _: &Type, expr: Expr) -> Expr {
         parse_quote! { Box::into_raw(Box::new(#expr.into())) }
+    }
+
+    fn free(&self, _: &Type, expr: Expr) -> Option<Expr> {
+        Some(parse_quote! {{
+            let tmp = #expr;
+            if !tmp.is_null() {
+                unsafe { *Box::from_raw(tmp) };
+            }
+        }})
     }
 }

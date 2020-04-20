@@ -31,6 +31,10 @@ impl super::Behavior for Behavior {
             ::ffishim::library::Outcome::from(#expr.map(|#receiver| #subexpr)).into_raw()
         }
     }
+
+    fn free(&self, _: &Type, expr: Expr) -> Option<Expr> {
+        Some(parse_quote! { ::ffishim::library::free_outcome(#expr) })
+    }
 }
 
 impl Behavior {

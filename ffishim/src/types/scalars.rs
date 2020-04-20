@@ -66,4 +66,8 @@ impl super::Behavior for Behavior {
     fn from(&self, _: &Type, expr: Expr) -> Expr {
         expr
     }
+
+    fn free(&self, _: &Type, _: Expr) -> Option<Expr> {
+        None
+    }
 }

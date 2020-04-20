@@ -24,4 +24,8 @@ impl super::Behavior for Behavior {
     fn from(&self, _: &Type, _: Expr) -> Expr {
         panic!("vec from not implemented");
     }
+
+    fn free(&self, _: &Type, _: Expr) -> Option<Expr> {
+        None
+    }
 }
