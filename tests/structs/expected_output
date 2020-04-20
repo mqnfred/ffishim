@@ -1,4 +1,3 @@
-ffi_cheese_shop(gps).lat = 37.405263
-ffi_cheese_shop(gps).lon = -122.109926
-ffi_cheese_shop(gps).planet = (nil)
+37.405263
+-122.109926
 ---

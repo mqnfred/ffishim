@@ -62,7 +62,6 @@ pub struct TryInto {
 mod try_into;
 
 pub struct Free {
-    orig_name: ::syn::Ident,
 }
 mod free;
 

@@ -8,7 +8,7 @@ Generate a thin FFI layer for your rust API using procedural macros.
 
  - [x] `try_into` struct transformation
  - [ ] `Vec` type behavior
- - [ ] `Result` type behavior (and use it in `function.rs`)
+ - [x] `Result` type behavior (and use it in `function.rs`)
  - [ ] `Foreign` type behavior
  - [ ] `free_*` method generation for structs/enums
 
