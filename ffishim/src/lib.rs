@@ -61,6 +61,11 @@ pub struct TryInto {
 }
 mod try_into;
 
+pub struct New {
+    new_funcs: Vec<::syn::ItemFn>,
+}
+mod new;
+
 pub struct Free {
     func_name: ::syn::Ident,
     receiver: ::syn::Expr,
