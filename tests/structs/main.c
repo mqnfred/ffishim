@@ -12,9 +12,10 @@ typedef struct gps {
 extern outcome_t *ffi_milk_pail_coordinates();
 
 int main() {
-	TEST(ffi_milk_pail_coordinates(), gps_t, {
-		printf("%lf\n", res.lat);
-		printf("%lf\n", res.lon);
+	TEST(ffi_milk_pail_coordinates(), gps_t*, {
+		printf("%lf\n", res->lat);
+		printf("%lf\n", res->lon);
+		free(res);
 	});
 	SEPARATOR;
 

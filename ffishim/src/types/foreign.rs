@@ -16,17 +16,27 @@ impl super::Behavior for Behavior {
         if let Type::Path(mut tp) = sty {
             let seg = tp.path.segments.last_mut().expect(">0 segments");
             seg.ident = seg.ident.clone().prefix("FFI");
-            Type::Path(tp)
+            parse_quote! { *mut #tp }
         } else {
             panic!("only foreign types of type path supported");
         }
     }
 
     fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
-        parse_quote! {{ let t: Result<#sty, ::ffishim::library::Error> = #expr.try_into(); t }}
+        parse_quote! {{
+            let tmp = #expr;
+            let tmp = if tmp.is_null() {
+                Err(::ffishim::library::Error::msg("uninitialized struct"))
+            } else {
+                let tmp = *unsafe { Box::from_raw(tmp) };
+                let tmp: Result<#sty, ::ffishim::library::Error> = tmp.try_into();
+                tmp
+            }
+
+        }}
     }
 
     fn from(&self, _: &Type, expr: Expr) -> Expr {
-        parse_quote! { #expr.into() }
+        parse_quote! { Box::into_raw(Box::new(#expr.into())) }
     }
 }
