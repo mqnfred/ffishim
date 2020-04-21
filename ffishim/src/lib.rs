@@ -1,3 +1,14 @@
+//! The backend for the `ffishim_derive` procedural macro.
+//!
+//! This crate provides:
+//!
+//!  - The C types used by the "ffi shim" layer such as `FFIVec` and `FFIResult` for example.
+//!  - The logic for generating a "ffi shim" layer around your API. See the `ffishim_derive`
+//!    macro for more documentation on that.
+//!
+//! You most likely should not use this API directly, and rely on the `ffishim_derive` procedural
+//! macro for all your ffi shim needs.
+
 #![feature(vec_into_raw_parts)]
 #[macro_use]
 extern crate darling;
