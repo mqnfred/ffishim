@@ -1,4 +1,4 @@
-impl<T> super::Array<T> {
+impl<T> super::FFIVec<T> {
     pub fn from(vec: Vec<T>) -> Self {
         let (ptr, len, cap) = vec.into_raw_parts();
         Self{ptr, len, cap}

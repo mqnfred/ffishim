@@ -6,9 +6,9 @@ Generate a thin FFI layer for your rust API using procedural macros.
 
 ### Implementation
 
- - Should `from` become `try_from`? (invalid rust string -> CString unsafe)
- - Reconsider ffishim's `Error` type (anyhow? trait? ...)
+ - `from` should become `try_from`? (invalid rust string -> CString unsafe)
  - Replace functions if `feature(ffishim)` instead of `ffi_` prefix
+ - Reconsider dependence on `::anyhow::Error` explicitly
  - Implement opaque types/fields
 
 ### Testing

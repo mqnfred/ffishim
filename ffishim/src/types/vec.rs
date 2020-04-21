@@ -1,7 +1,7 @@
 use crate::helpers::*;
 use ::syn::*;
 
-/// The std lib's `Vec` type behavior, backed by ffishim library's `Array`.
+/// The std lib's `Vec` type behavior, backed by ffishim library's `FFIVec`.
 pub struct Behavior;
 
 impl super::Behavior for Behavior {
@@ -16,7 +16,7 @@ impl super::Behavior for Behavior {
     fn fold(&self, sty: Type) -> Type {
         let subtype = sty.into_subtype();
         let ffi_subtype = crate::types::switch(&subtype).fold(subtype);
-        parse_quote! { *mut ::ffishim::library::Array<#ffi_subtype> }
+        parse_quote! { *mut ::ffishim::library::FFIVec<#ffi_subtype> }
     }
 
     fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
@@ -30,7 +30,7 @@ impl super::Behavior for Behavior {
             let tmp = #expr;
             if !tmp.is_null() {
                 let tmp = *unsafe { Box::from_raw(tmp) };
-                ::ffishim::library::Array::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
+                ::ffishim::library::FFIVec::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
                     #subexpr
                 }).collect::<Result<Vec<_>, ::ffishim::library::Error>>()
             } else {
@@ -47,7 +47,7 @@ impl super::Behavior for Behavior {
         let subexpr = crate::types::switch(&orig_subtype).from(&orig_subtype, receiver.clone());
 
         parse_quote! {
-            Box::into_raw(Box::new(::ffishim::library::Array::<#ffi_subtype>::from(
+            Box::into_raw(Box::new(::ffishim::library::FFIVec::<#ffi_subtype>::from(
                 #expr.into_iter().map(|#receiver| #subexpr).collect()
             )))
         }
@@ -64,7 +64,7 @@ impl super::Behavior for Behavior {
             let tmp = #expr;
             if !tmp.is_null() {
                 let tmp = *unsafe { Box::from_raw(tmp) };
-                ::ffishim::library::Array::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
+                ::ffishim::library::FFIVec::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
                     #subexpr
                 }).last();
             }

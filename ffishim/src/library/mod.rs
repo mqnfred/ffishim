@@ -12,14 +12,14 @@ pub use anyhow::Error;
 
 /// A C-compatible array structure to replace rust's `Vec` in the shim layer.
 #[repr(C)]
-pub struct Array<T> {
+pub struct FFIVec<T> {
     // TODO: phantom market lifetime??
     // TODO: usize ds la struct
     pub ptr: *mut T,
     pub len: usize,
     pub cap: usize,
 }
-mod array;
+mod vec;
 
 /// A C-compatible result structure to replace rust's `Result` in the shim layer.
 ///
@@ -29,7 +29,7 @@ mod array;
 /// The Result can be considered successful even though the payload is nil, for example in the
 /// case where the method returns nothing.
 #[repr(C)]
-pub struct Result<T> {
+pub struct FFIResult<T> {
     pub error: *mut ::libc::c_char,
     pub payload: *mut T,
 }

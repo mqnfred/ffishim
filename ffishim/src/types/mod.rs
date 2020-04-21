@@ -11,8 +11,8 @@
 //! |---|---|
 //! |`String`|`*mut u8`|
 //! |`Option<T>`|`*mut T`|
-//! |`Vec<T>`|`ffishim::library::Array<T>`|
-//! |`Result<T, E>`|`ffishim::library::Result<T>`|
+//! |`Vec<T>`|`ffishim::library::FFIVec<T>`|
+//! |`Result<T, E>`|`ffishim::library::FFIResult<T>`|
 //! |`bool`|`libc::c_int`|
 //! |`char`|`libc::c_char`|
 //!
@@ -100,8 +100,8 @@ mod option;
 pub use option::Behavior as Option;
 mod result;
 pub use result::Behavior as Result;
-mod vector;
-pub use vector::Behavior as Vector;
+mod vec;
+pub use vec::Behavior as Vector;
 
 // Foreign/custom types implementing an ffi shim
 mod foreign;

@@ -1,4 +1,4 @@
-impl<T> From<::std::result::Result<T, super::anyhow::Error>> for super::Result<T> {
+impl<T> From<::std::result::Result<T, super::anyhow::Error>> for super::FFIResult<T> {
     fn from(res: ::std::result::Result<T, super::anyhow::Error>) -> Self {
         match res {
             Ok(t) => Self::success(t),
@@ -7,7 +7,7 @@ impl<T> From<::std::result::Result<T, super::anyhow::Error>> for super::Result<T
     }
 }
 
-impl<T> super::Result<T> {
+impl<T> super::FFIResult<T> {
     pub fn success(payload: T) -> Self {
         Self {
             error: ::std::ptr::null_mut(),
@@ -24,7 +24,7 @@ impl<T> super::Result<T> {
 }
 
 #[no_mangle]
-pub extern "C" fn free_result(res: *mut super::Result<u64>) {
+pub extern "C" fn free_result(res: *mut super::FFIResult<u64>) {
     if !res.is_null() {
         let res = *unsafe { Box::from_raw(res) };
 

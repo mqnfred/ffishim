@@ -16,7 +16,7 @@ impl super::Behavior for Behavior {
     fn fold(&self, sty: Type) -> Type {
         let subtype = sty.into_subtype();
         let subtype = crate::types::switch(&subtype).fold(subtype);
-        parse_quote! { *mut ::ffishim::library::Result<#subtype> }
+        parse_quote! { *mut ::ffishim::library::FFIResult<#subtype> }
     }
 
     fn try_into(&self, _: &Type, _: Expr) -> Expr {
@@ -28,7 +28,7 @@ impl super::Behavior for Behavior {
         let receiver: ::syn::Expr = ::syn::parse_quote! { tmp };
         let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
         ::syn::parse_quote! {
-            Box::into_raw(Box::new(::ffishim::library::Result::from(#expr.map(|#receiver| #subexpr))))
+            Box::into_raw(Box::new(::ffishim::library::FFIResult::from(#expr.map(|#receiver| #subexpr))))
         }
     }
 
@@ -38,15 +38,15 @@ impl super::Behavior for Behavior {
 }
 
 impl Behavior {
-    /// Returns an expression that tries to unpack a `Result`.
+    /// Returns an expression that tries to unpack an `FFIResult`.
     ///
-    /// Upon failure, returns *directly* an error-full `Result`. Can be used to unpack arguments in
-    /// a ffi wrapper that returns a `Result`.
+    /// Upon failure, returns *directly* an error-full `FFIResult`. Can be used to unpack arguments
+    /// in a ffi wrapper that returns an `FFIResult`.
     pub fn try_or_return(&self, expr: Expr) -> Expr {
         ::syn::parse_quote! {
             match #expr {
                 Ok(tmp) => tmp,
-                Err(err) => return Box::into_raw(Box::new(::ffishim::library::Result::error(err))),
+                Err(err) => return Box::into_raw(Box::new(::ffishim::library::FFIResult::error(err))),
             }
         }
     }
@@ -55,6 +55,6 @@ impl Behavior {
     /// successful.
     pub fn wrap_success(&self, sty: &Type, expr: Expr) -> Expr {
         let expr = crate::types::switch(&sty).from(&sty, expr);
-        ::syn::parse_quote! { Box::into_raw(Box::new(::ffishim::library::Result::success(#expr))) }
+        ::syn::parse_quote! { Box::into_raw(Box::new(::ffishim::library::FFIResult::success(#expr))) }
     }
 }
