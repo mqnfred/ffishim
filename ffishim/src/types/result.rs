@@ -28,7 +28,7 @@ impl super::Behavior for Behavior {
         let receiver: ::syn::Expr = ::syn::parse_quote! { tmp };
         let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
         ::syn::parse_quote! {
-            ::ffishim::library::Result::from(#expr.map(|#receiver| #subexpr)).into_raw()
+            Box::into_raw(Box::new(::ffishim::library::Result::from(#expr.map(|#receiver| #subexpr))))
         }
     }
 
@@ -46,7 +46,7 @@ impl Behavior {
         ::syn::parse_quote! {
             match #expr {
                 Ok(tmp) => tmp,
-                Err(err) => return ::ffishim::library::Result::error(err).into_raw(),
+                Err(err) => return Box::into_raw(Box::new(::ffishim::library::Result::error(err))),
             }
         }
     }
@@ -55,6 +55,6 @@ impl Behavior {
     /// successful.
     pub fn wrap_success(&self, sty: &Type, expr: Expr) -> Expr {
         let expr = crate::types::switch(&sty).from(&sty, expr);
-        ::syn::parse_quote! { ::ffishim::library::Result::success(#expr).into_raw() }
+        ::syn::parse_quote! { Box::into_raw(Box::new(::ffishim::library::Result::success(#expr))) }
     }
 }

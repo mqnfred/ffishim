@@ -8,13 +8,3 @@ impl<T> super::Array<T> {
         unsafe { Vec::from_raw_parts(array.ptr, array.len, array.cap) }
     }
 }
-
-impl<T> super::Array<T> {
-    pub fn into_raw(self) -> *mut Self {
-        Box::into_raw(Box::new(self))
-    }
-
-    pub fn from_raw(input: *mut Self) -> Self {
-        unsafe { *Box::from_raw(input) }
-    }
-}

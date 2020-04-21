@@ -29,7 +29,7 @@ impl super::Behavior for Behavior {
         parse_quote! {{
             let tmp = #expr;
             if !tmp.is_null() {
-                let tmp = ::ffishim::library::Array::<#ffi_subtype>::from_raw(tmp);
+                let tmp = *unsafe { Box::from_raw(tmp) };
                 ::ffishim::library::Array::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
                     #subexpr
                 }).collect::<Result<Vec<_>, ::ffishim::library::Error>>()
@@ -47,9 +47,9 @@ impl super::Behavior for Behavior {
         let subexpr = crate::types::switch(&orig_subtype).from(&orig_subtype, receiver.clone());
 
         parse_quote! {
-            ::ffishim::library::Array::<#ffi_subtype>::from(
+            Box::into_raw(Box::new(::ffishim::library::Array::<#ffi_subtype>::from(
                 #expr.into_iter().map(|#receiver| #subexpr).collect()
-            ).into_raw()
+            )))
         }
     }
 
@@ -63,7 +63,7 @@ impl super::Behavior for Behavior {
         Some(parse_quote!{{
             let tmp = #expr;
             if !tmp.is_null() {
-                let tmp = ::ffishim::library::Array::<#ffi_subtype>::from_raw(tmp);
+                let tmp = *unsafe { Box::from_raw(tmp) };
                 ::ffishim::library::Array::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
                     #subexpr
                 }).last();

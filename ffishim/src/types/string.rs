@@ -24,12 +24,17 @@ impl super::Behavior for Behavior {
     fn try_into(&self, _: &Type, expr: Expr) -> Expr {
         parse_quote! {
             {
-                let tmp: Result<String, ::ffishim::library::Error> = unsafe {
-                    ::std::ffi::CString::from_raw(#expr)
-                }.into_string().map_err(|e| {
-                    ::ffishim::library::Error::msg(e.to_string())
-                });
-                tmp
+                let tmp = #expr;
+                if tmp.is_null() {
+                    Err(::ffishim::library::Error::msg("empty ffi string passed"))
+                } else {
+                    let tmp: Result<String, ::ffishim::library::Error> = unsafe {
+                        ::std::ffi::CString::from_raw(tmp)
+                    }.into_string().map_err(|e| {
+                        ::ffishim::library::Error::msg(e.to_string())
+                    });
+                    tmp
+                }
             }
         }
     }

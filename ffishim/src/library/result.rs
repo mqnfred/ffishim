@@ -21,14 +21,6 @@ impl<T> super::Result<T> {
             payload: ::std::ptr::null_mut(),
         }
     }
-
-    pub fn into_raw(self) -> *mut Self {
-        Box::into_raw(Box::new(self))
-    }
-
-    pub fn from_raw(input: *mut Self) -> Self {
-        unsafe { *Box::from_raw(input) }
-    }
 }
 
 #[no_mangle]
