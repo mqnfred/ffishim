@@ -35,8 +35,8 @@ impl super::Behavior for Behavior {
         }}
     }
 
-    fn from(&self, _: &Type, expr: Expr) -> Expr {
-        parse_quote! { Box::into_raw(Box::new(#expr.into())) }
+    fn try_from(&self, _: &Type, expr: Expr) -> Expr {
+        parse_quote! { Box::into_raw(Box::new(#expr.try_into()?)) }
     }
 
     fn free(&self, _: &Type, expr: Expr) -> Option<Expr> {

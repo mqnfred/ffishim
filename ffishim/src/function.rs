@@ -69,7 +69,7 @@ fn call_expr_from_item_fn(ifn: &::syn::ItemFn) -> ::syn::Expr {
 
     if let ::syn::ReturnType::Type(_, sty) = &ifn.sig.output {
         if crate::types::Result.is(&sty) {
-            crate::types::Result.from(sty, call_expr)
+            crate::types::Result.try_from(sty, call_expr)
         } else {
             crate::types::Result.wrap_success(sty, call_expr)
         }

@@ -11,12 +11,12 @@ impl crate::Field {
         }
     }
 
-    pub(crate) fn from(&self, idx: usize, receiver: Option<&::syn::Expr>) -> ::syn::Expr {
-        crate::types::switch(&self.ty).from(&self.ty, self.build_receiver(idx, receiver))
-    }
-
     pub(crate) fn try_into(&self, idx: usize, receiver: Option<&::syn::Expr>) -> ::syn::Expr {
         crate::types::switch(&self.ty).try_into(&self.ty, self.build_receiver(idx, receiver))
+    }
+
+    pub(crate) fn try_from(&self, idx: usize, receiver: Option<&::syn::Expr>) -> ::syn::Expr {
+        crate::types::switch(&self.ty).try_from(&self.ty, self.build_receiver(idx, receiver))
     }
 
     pub(crate) fn free(&self, idx: usize, receiver: Option<&::syn::Expr>) -> Option<::syn::Expr> {

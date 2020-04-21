@@ -1,6 +1,6 @@
 use crate::helpers::*;
 
-impl ::quote::ToTokens for crate::From {
+impl ::quote::ToTokens for crate::TryFrom {
     fn to_tokens(&self, tokens: &mut ::proc_macro2::TokenStream) {
         let orig_name = &self.orig_name;
         let ffi_name = &self.ffi_name;
@@ -8,8 +8,9 @@ impl ::quote::ToTokens for crate::From {
         let init_expr = &self.init_expr;
 
         tokens.extend(::quote::quote! {
-            impl From<#orig_name> for #ffi_name {
-                fn from(#receiver: #orig_name) -> #ffi_name {
+            impl ::std::convert::TryFrom<#orig_name> for #ffi_name {
+                type Error = ::ffishim::library::Error;
+                fn try_from(#receiver: #orig_name) -> Result<#ffi_name, Self::Error> {
                     #init_expr
                 }
             }
@@ -17,7 +18,7 @@ impl ::quote::ToTokens for crate::From {
     }
 }
 
-impl<'a> From<&'a crate::Data> for crate::From {
+impl<'a> From<&'a crate::Data> for crate::TryFrom {
     fn from(data: &'a crate::Data) -> Self {
         let orig_name = data.ident.clone();
         let ffi_name = data.ident.clone().prefix("FFI");
@@ -65,7 +66,7 @@ fn enum_init_expr(
                 #orig_variant_fullpath{#(#destructuring),*} => #init
             },
             ::darling::ast::Style::Unit => ::syn::parse_quote! {
-                #orig_variant_fullpath => #ffi_variant_fullpath,
+                #orig_variant_fullpath => Ok(#ffi_variant_fullpath),
             },
         }
     }).collect();
@@ -83,15 +84,15 @@ fn struct_init_expr(
     fields: &::darling::ast::Fields<crate::Field>,
 ) -> ::syn::Expr {
     let exprs = fields.iter().enumerate().map(|(idx, field)| {
-        field.from(idx, receiver)
+        field.try_from(idx, receiver)
     });
 
     if fields.style == ::darling::ast::Style::Tuple {
-        ::syn::parse_quote! { #ffi_name(#(#exprs),*) }
+        ::syn::parse_quote! { #ffi_name(#(#exprs?),*) }
     } else {
         let field_inits: Vec<::syn::FieldValue> = fields.iter().zip(exprs).map(|(field, expr)| {
             let field_name = &field.ident.as_ref().unwrap();
-            ::syn::parse_quote! { #field_name: #expr }
+            ::syn::parse_quote! { #field_name: #expr? }
         }).collect();
         ::syn::parse_quote! { #ffi_name{#(#field_inits),*} }
     }

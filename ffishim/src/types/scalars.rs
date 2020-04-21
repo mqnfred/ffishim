@@ -63,8 +63,8 @@ impl super::Behavior for Behavior {
         ::syn::parse_quote! {{ let t: Result<#sty, ::ffishim::library::Error> = Ok(#expr); t }}
     }
 
-    fn from(&self, _: &Type, expr: Expr) -> Expr {
-        expr
+    fn try_from(&self, _: &Type, expr: Expr) -> Expr {
+        ::syn::parse_quote! { Ok(#expr) }
     }
 
     fn free(&self, _: &Type, _: Expr) -> Option<Expr> {

@@ -39,17 +39,17 @@ impl super::Behavior for Behavior {
         }}
     }
 
-    fn from(&self, sty: &Type, expr: Expr) -> Expr {
+    fn try_from(&self, sty: &Type, expr: Expr) -> Expr {
         let orig_subtype = sty.clone().into_subtype();
         let ffi_subtype = crate::types::switch(&orig_subtype).fold(orig_subtype.clone());
 
         let receiver: Expr = parse_quote! { tmp };
-        let subexpr = crate::types::switch(&orig_subtype).from(&orig_subtype, receiver.clone());
+        let subexpr = crate::types::switch(&orig_subtype).try_from(&orig_subtype, receiver.clone());
 
         parse_quote! {
-            Box::into_raw(Box::new(::ffishim::library::FFIVec::<#ffi_subtype>::from(
+            Ok(Box::into_raw(Box::new(::ffishim::library::FFIVec::<#ffi_subtype>::from(
                 #expr.into_iter().map(|#receiver| #subexpr).collect()
-            )))
+            ))))
         }
     }
 

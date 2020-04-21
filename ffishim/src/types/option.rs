@@ -39,17 +39,17 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn from(&self, sty: &Type, expr: Expr) -> Expr {
+    fn try_from(&self, sty: &Type, expr: Expr) -> Expr {
         let subtype = sty.clone().into_subtype();
         let receiver: Expr = parse_quote! { tmp };
-        let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
+        let subexpr = crate::types::switch(&subtype).try_from(&subtype, receiver.clone());
 
         parse_quote! {
-            if let Some(#receiver) = #expr {
+            Ok(if let Some(#receiver) = #expr {
                 Box::into_raw(Box::new(#subexpr))
             } else {
                 ::std::ptr::null_mut()
-            }
+            })
         }
     }
 

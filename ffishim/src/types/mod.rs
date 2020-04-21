@@ -56,7 +56,7 @@ pub trait Behavior: Sync + Send {
     fn try_into(&self, sty: &::syn::Type, name: ::syn::Expr) -> ::syn::Expr;
 
     /// Returns an `Expr`ession that mutates the original type into its shim equivalent.
-    fn from(&self, sty: &::syn::Type, name: ::syn::Expr) -> ::syn::Expr;
+    fn try_from(&self, sty: &::syn::Type, name: ::syn::Expr) -> ::syn::Expr;
 
     /// Returns an `Expr`ession that frees an expression of the given type.
     fn free(&self, sty: &::syn::Type, name: ::syn::Expr) -> ::std::option::Option<::syn::Expr>;

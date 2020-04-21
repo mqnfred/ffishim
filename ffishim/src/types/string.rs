@@ -39,11 +39,11 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn from(&self, _: &Type, expr: Expr) -> Expr {
+    fn try_from(&self, _: &Type, expr: Expr) -> Expr {
         parse_quote! {
             ::std::ffi::CString::new(
                 #expr
-            ).expect("bad rust string sent through ffi shim").into_raw()
+            ).map_err(|e| ::ffishim::library::Error::msg(e.to_string()))?.into_raw()
         }
     }
 

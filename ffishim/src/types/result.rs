@@ -23,12 +23,12 @@ impl super::Behavior for Behavior {
         panic!("cannot pass results as arguments");
     }
 
-    fn from(&self, sty: &Type, expr: Expr) -> Expr {
+    fn try_from(&self, sty: &Type, expr: Expr) -> Expr {
         let subtype = sty.clone().into_subtype();
         let receiver: ::syn::Expr = ::syn::parse_quote! { tmp };
-        let subexpr = crate::types::switch(&subtype).from(&subtype, receiver.clone());
+        let subexpr = crate::types::switch(&subtype).try_from(&subtype, receiver.clone());
         ::syn::parse_quote! {
-            Box::into_raw(Box::new(::ffishim::library::FFIResult::from(#expr.map(|#receiver| #subexpr))))
+            Ok(Box::into_raw(Box::new(::ffishim::library::FFIResult::try_from(#expr.map(|#receiver| #subexpr)))))
         }
     }
 
@@ -38,7 +38,7 @@ impl super::Behavior for Behavior {
 }
 
 impl Behavior {
-    /// Returns an expression that tries to unpack an `FFIResult`.
+    /// Returns an expression that tries to unpack a `Result`.
     ///
     /// Upon failure, returns *directly* an error-full `FFIResult`. Can be used to unpack arguments
     /// in a ffi wrapper that returns an `FFIResult`.
@@ -54,7 +54,7 @@ impl Behavior {
     /// Returns an expression that wraps the given `expr` into a `Result` that is always
     /// successful.
     pub fn wrap_success(&self, sty: &Type, expr: Expr) -> Expr {
-        let expr = crate::types::switch(&sty).from(&sty, expr);
+        let expr = crate::types::switch(&sty).try_from(&sty, expr);
         ::syn::parse_quote! { Box::into_raw(Box::new(::ffishim::library::FFIResult::success(#expr))) }
     }
 }

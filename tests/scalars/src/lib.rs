@@ -6,6 +6,7 @@ fn add_i64(a: i64, b: i64) -> i64 {
     a + b
 }
 
+/*
 #[ffishim]
 fn add_f64(a: f64, b: f32) -> f64 {
     a + b as f64
@@ -19,3 +20,4 @@ fn fails(a: i64) -> Result<i64, ::ffishim::library::Error> {
         Err(::ffishim::library::Error::msg("only 5 accepted"))
     }
 }
+*/

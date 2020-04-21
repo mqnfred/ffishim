@@ -77,14 +77,14 @@ pub struct Function {
 }
 mod function;
 
-/// Derived from `Data` to generate the `FFIName::from(Name)` conversion.
-pub struct From {
+/// Derived from `Data` to generate the `FFIName::try_from(Name)` conversion.
+pub struct TryFrom {
     orig_name: ::syn::Ident,
     ffi_name: ::syn::Ident,
     receiver: ::syn::Expr,
     init_expr: ::syn::Expr,
 }
-mod from;
+mod try_from;
 
 /// Derived from `Data` to generate the `FFIName::try_into(Name)` conversion.
 pub struct TryInto {
