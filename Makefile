@@ -14,7 +14,7 @@ tests/%/actual_output: tests/%/a.out
 	valgrind --error-exitcode=1 --leak-check=full $< | tee $@
 
 tests/%/a.out: tests/%/main.c target/debug/lib%.a tests/helpers.h
-	gcc -Wall -g -Os -o $@ $(word 1,$^) $(word 2,$^) -ldl -lm -pthread
+	$(CC) $(CFLAGS) -o $@ $(word 1,$^) $(word 2,$^) -ldl -lm -pthread
 
 target/debug/lib%.a: tests/%/src/lib.rs tests/%/Cargo.toml $(FFISHIM_SRC)
 	cargo build --package $(patsubst target/debug/lib%.a,%,$@)
