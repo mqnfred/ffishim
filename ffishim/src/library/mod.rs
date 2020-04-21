@@ -16,8 +16,8 @@ pub struct Array<T> {
     // TODO: phantom market lifetime??
     // TODO: usize ds la struct
     pub ptr: *mut T,
-    pub len: u64,
-    pub cap: u64,
+    pub len: usize,
+    pub cap: usize,
 }
 mod array;
 
