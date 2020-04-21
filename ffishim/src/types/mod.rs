@@ -12,7 +12,7 @@
 //! |`String`|`*mut u8`|
 //! |`Option<T>`|`*mut T`|
 //! |`Vec<T>`|`ffishim::library::Array<T>`|
-//! |`Result<T, E>`|`ffishim::library::Outcome<T>`|
+//! |`Result<T, E>`|`ffishim::library::Result<T>`|
 //! |`bool`|`libc::c_int`|
 //! |`char`|`libc::c_char`|
 //!

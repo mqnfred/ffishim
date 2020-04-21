@@ -6,14 +6,14 @@
 
 #define SEPARATOR printf("---\n");
 #define TEST(call, type, todo) { \
-	outcome_t *o = call; \
-	if (o->message != NULL) { \
-		printf("error: %s\n", o->message); \
+	result_t *r = call; \
+	if (r->message != NULL) { \
+		printf("error: %s\n", r->message); \
 	} else { \
-		type res = *(type*)(o->payload); \
+		type res = *(type*)(r->payload); \
 		todo; \
 	} \
-	free_outcome(o); \
+	free_result(r); \
 }
 
 #define HEAP_STRING(str) ({ \

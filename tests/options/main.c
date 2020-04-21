@@ -4,10 +4,10 @@
 #include "../../ffishim/header.h"
 #include "../helpers.h"
 
-extern outcome_t *ffi_give_option();
-extern outcome_t *ffi_take_option(int32_t *opt);
-extern outcome_t *ffi_string_option(char **s);
-extern outcome_t *ffi_option_result(int32_t *opt);
+extern result_t *ffi_give_option();
+extern result_t *ffi_take_option(int32_t *opt);
+extern result_t *ffi_string_option(char **s);
+extern result_t *ffi_option_result(int32_t *opt);
 
 int main() {
 	TEST(ffi_give_option(), int32_t*, {

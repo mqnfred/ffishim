@@ -1,12 +1,12 @@
 #ifndef FFISHIM_LIBRARY
 #define FFISHIM_LIBRARY
 
-typedef struct outcome {
+typedef struct result {
 	char *message;
 	void *payload;
-} outcome_t;
+} result_t;
 
-extern void free_outcome(outcome_t *outcome);
+extern void free_result(result_t *result);
 
 #define NONE NULL
 #define SOME(type, val) ({ \

@@ -1,5 +1,5 @@
-impl<T> From<Result<T, super::anyhow::Error>> for super::Outcome<T> {
-    fn from(res: Result<T, super::anyhow::Error>) -> Self {
+impl<T> From<::std::result::Result<T, super::anyhow::Error>> for super::Result<T> {
+    fn from(res: ::std::result::Result<T, super::anyhow::Error>) -> Self {
         match res {
             Ok(t) => Self::success(t),
             Err(err) => Self::error(err),
@@ -7,7 +7,7 @@ impl<T> From<Result<T, super::anyhow::Error>> for super::Outcome<T> {
     }
 }
 
-impl<T> super::Outcome<T> {
+impl<T> super::Result<T> {
     pub fn success(payload: T) -> Self {
         Self {
             error: ::std::ptr::null_mut(),
@@ -32,16 +32,16 @@ impl<T> super::Outcome<T> {
 }
 
 #[no_mangle]
-pub extern "C" fn free_outcome(outcome: *mut super::Outcome<u64>) {
-    if !outcome.is_null() {
-        let outcome = *unsafe { Box::from_raw(outcome) };
+pub extern "C" fn free_result(res: *mut super::Result<u64>) {
+    if !res.is_null() {
+        let res = *unsafe { Box::from_raw(res) };
 
-        if !outcome.error.is_null() {
-            unsafe { ::std::ffi::CString::from_raw(outcome.error) };
+        if !res.error.is_null() {
+            unsafe { ::std::ffi::CString::from_raw(res.error) };
         }
 
-        if !outcome.payload.is_null() {
-            unsafe { Box::from_raw(outcome.payload) };
+        if !res.payload.is_null() {
+            unsafe { Box::from_raw(res.payload) };
         }
     }
 }

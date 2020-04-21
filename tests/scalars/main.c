@@ -4,9 +4,9 @@
 #include "../../ffishim/header.h"
 #include "../helpers.h"
 
-extern outcome_t *ffi_add_i64(int64_t a, int64_t b);
-extern outcome_t *ffi_add_f64(double a, float b);
-extern outcome_t *ffi_fails(int64_t a);
+extern result_t *ffi_add_i64(int64_t a, int64_t b);
+extern result_t *ffi_add_f64(double a, float b);
+extern result_t *ffi_fails(int64_t a);
 
 int main() {
 	TEST(ffi_add_i64(1, 3), int64_t, printf("%ld\n", res));

@@ -59,7 +59,7 @@ fn call_expr_from_item_fn(ifn: &::syn::ItemFn) -> ::syn::Expr {
         if let ::syn::FnArg::Typed(pat) = arg {
             let arg_name = pat.unwrap_ident_as_expr();
             let expr = crate::types::switch(&pat.ty).try_into(&pat.ty, arg_name);
-            crate::types::Result.try_or_outcome(expr)
+            crate::types::Result.try_or_return(expr)
         } else {
             panic!("no receiver (self) supported in function signatures");
         }

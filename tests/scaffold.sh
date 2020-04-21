@@ -28,7 +28,7 @@ cat > ${dir}/main.c <<EOF
 #include "../../ffishim/header.h"
 #include "../helpers.h"
 
-extern outcome_t *ffi_add(int64_t a, int64_t b);
+extern result_t *ffi_add(int64_t a, int64_t b);
 
 int main() {
 	TEST(ffi_add(1, 3), int64_t, printf("%ld\n", res));

@@ -12,7 +12,7 @@ typedef struct gps {
 } gps_t;
 extern gps_t *new_gps(double lat, double lon);
 extern void free_gps(gps_t *gps);
-extern outcome_t *ffi_push_gps(array_t *coordinates, gps_t *gps);
+extern result_t *ffi_push_gps(array_t *coordinates, gps_t *gps);
 
 typedef struct player {
 	char *name;
@@ -20,7 +20,7 @@ typedef struct player {
 } player_t;
 extern player_t *new_player(char *name, array_t *points);
 extern void free_player(player_t *p);
-extern outcome_t *ffi_player_sum_points(player_t *p);
+extern result_t *ffi_player_sum_points(player_t *p);
 
 int main() {
 	array_t *points = ARRAY_NEW(uint64_t, 5);

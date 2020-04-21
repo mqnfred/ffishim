@@ -21,13 +21,16 @@ pub struct Array<T> {
 }
 mod array;
 
-/// A C-compatible outcome structure to replace rust's `Result` in the shim layer.
+/// A C-compatible result structure to replace rust's `Result` in the shim layer.
 ///
-///  - A successful outcome is defined by a 0 `errorcode` and a non-NULL `payload`.
-///  - A failure outcome is defined by a non-0 errorcode and a non-NULL `message`.
+///  - A successful result is defined by a null `message`.
+///  - A failure result is defined by a non-null `message`.
+///
+/// The Result can be considered successful even though the payload is nil, for example in the
+/// case where the method returns nothing.
 #[repr(C)]
-pub struct Outcome<T> {
+pub struct Result<T> {
     pub error: *mut ::libc::c_char,
     pub payload: *mut T,
 }
-mod outcome;
+mod result;

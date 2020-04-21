@@ -20,8 +20,8 @@ typedef struct player {
 extern player_t *new_player(char *name, uint64_t *age, gps_t *coordinates);
 extern void free_player(player_t *p);
 
-extern outcome_t *ffi_set_player_lat(player_t *p, double lat);
-extern outcome_t *ffi_get_player_1();
+extern result_t *ffi_set_player_lat(player_t *p, double lat);
+extern result_t *ffi_get_player_1();
 
 int main() {
 	TEST(ffi_get_player_1(), player_t*, {
