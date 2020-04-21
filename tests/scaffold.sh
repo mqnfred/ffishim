@@ -31,9 +31,7 @@ cat > ${dir}/main.c <<EOF
 extern outcome_t *ffi_add(int64_t a, int64_t b);
 
 int main() {
-	outcome_t *outcome_1 = ffi_add(1, 3);
-	PRINTO("ffi_add(1, 3) = ", "%ld", int64_t, outcome_1);
-	free_outcome(outcome_1);
+	TEST(ffi_add(1, 3), int64_t, printf("%ld\n", res));
 	SEPARATOR;
 
 	return 0;
@@ -51,6 +49,6 @@ fn add(a: i64, b: i64) -> i64 {
 EOF
 
 cat > ${dir}/expected_output <<EOF
-ffi_add(1, 3) = 4
+4
 ---
 EOF

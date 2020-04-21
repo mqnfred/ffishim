@@ -13,19 +13,61 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn fold(&self, _: Type) -> Type {
-        panic!("vec fold not implemented");
+    fn fold(&self, sty: Type) -> Type {
+        let subtype = sty.into_subtype();
+        let ffi_subtype = crate::types::switch(&subtype).fold(subtype);
+        parse_quote! { *mut ::ffishim::library::Array<#ffi_subtype> }
     }
 
-    fn try_into(&self, _: &Type, _: Expr) -> Expr {
-        panic!("vec try_into not implemented");
+    fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
+        let orig_subtype = sty.clone().into_subtype();
+        let ffi_subtype = crate::types::switch(&orig_subtype).fold(orig_subtype.clone());
+
+        let receiver: Expr = parse_quote! { tmp };
+        let subexpr = crate::types::switch(&orig_subtype).try_into(&orig_subtype, receiver.clone());
+
+        parse_quote! {{
+            let tmp = #expr;
+            if !tmp.is_null() {
+                let tmp = ::ffishim::library::Array::<#ffi_subtype>::from_raw(tmp);
+                ::ffishim::library::Array::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
+                    #subexpr
+                }).collect::<Result<Vec<_>, ::ffishim::library::Error>>()
+            } else {
+                Err(::ffishim::library::Error::msg("nil array received"))
+            }
+        }}
     }
 
-    fn from(&self, _: &Type, _: Expr) -> Expr {
-        panic!("vec from not implemented");
+    fn from(&self, sty: &Type, expr: Expr) -> Expr {
+        let orig_subtype = sty.clone().into_subtype();
+        let ffi_subtype = crate::types::switch(&orig_subtype).fold(orig_subtype.clone());
+
+        let receiver: Expr = parse_quote! { tmp };
+        let subexpr = crate::types::switch(&orig_subtype).from(&orig_subtype, receiver.clone());
+
+        parse_quote! {
+            ::ffishim::library::Array::<#ffi_subtype>::from(
+                #expr.into_iter().map(|#receiver| #subexpr).collect()
+            ).into_raw()
+        }
     }
 
-    fn free(&self, _: &Type, _: Expr) -> Option<Expr> {
-        None
+    fn free(&self, sty: &Type, expr: Expr) -> Option<Expr> {
+        let orig_subtype = sty.clone().into_subtype();
+        let ffi_subtype = crate::types::switch(&orig_subtype).fold(orig_subtype.clone());
+
+        let receiver: Expr = parse_quote! { tmp };
+        let subexpr = crate::types::switch(&orig_subtype).free(&orig_subtype, receiver.clone());
+
+        Some(parse_quote!{{
+            let tmp = #expr;
+            if !tmp.is_null() {
+                let tmp = ::ffishim::library::Array::<#ffi_subtype>::from_raw(tmp);
+                ::ffishim::library::Array::<#ffi_subtype>::into_vec(tmp).into_iter().map(|#receiver| {
+                    #subexpr
+                }).last();
+            }
+        }})
     }
 }

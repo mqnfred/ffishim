@@ -13,6 +13,8 @@ pub use anyhow::Error;
 /// A C-compatible array structure to replace rust's `Vec` in the shim layer.
 #[repr(C)]
 pub struct Array<T> {
+    // TODO: phantom market lifetime??
+    // TODO: usize ds la struct
     pub ptr: *mut T,
     pub len: u64,
     pub cap: u64,

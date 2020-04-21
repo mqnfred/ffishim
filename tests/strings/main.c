@@ -12,7 +12,6 @@ int main() {
 		printf("%s\n", res);
 		free(res);
 	});
-
 	TEST(ffi_take_string(HEAP_STRING("ffi")), char*, {
 		printf("%s\n", res);
 		free(res);
