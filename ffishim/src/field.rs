@@ -7,20 +7,52 @@ impl crate::Field {
             vis: self.vis.clone(),
             ident: self.ident.clone(),
             colon_token: None,
-            ty: crate::types::switch(&self.ty).fold(self.ty.clone()),
+            ty: if self.opaque {
+                let ty = &self.ty;
+                ::syn::parse_quote! { *mut #ty }
+            } else {
+                crate::types::switch(&self.ty).fold(self.ty.clone())
+            },
         }
     }
 
     pub(crate) fn from(&self, idx: usize, receiver: Option<&::syn::Expr>) -> ::syn::Expr {
-        crate::types::switch(&self.ty).from(&self.ty, self.build_receiver(idx, receiver))
+        let receiver = self.build_receiver(idx, receiver);
+        if self.opaque {
+            ::syn::parse_quote! { Box::into_raw(Box::new(#receiver)) }
+        } else {
+            crate::types::switch(&self.ty).from(&self.ty, receiver)
+        }
     }
 
     pub(crate) fn try_into(&self, idx: usize, receiver: Option<&::syn::Expr>) -> ::syn::Expr {
-        crate::types::switch(&self.ty).try_into(&self.ty, self.build_receiver(idx, receiver))
+        let receiver = self.build_receiver(idx, receiver);
+        if self.opaque {
+            ::syn::parse_quote! {{
+                let tmp = #receiver;
+                if tmp.is_null() {
+                    Err(::ffishim::library::Error::msg("empty opaque field provided"))
+                } else {
+                    Ok(*unsafe { Box::from_raw(#receiver) })
+                }
+            }}
+        } else {
+            crate::types::switch(&self.ty).try_into(&self.ty, receiver)
+        }
     }
 
     pub(crate) fn free(&self, idx: usize, receiver: Option<&::syn::Expr>) -> Option<::syn::Expr> {
-        crate::types::switch(&self.ty).free(&self.ty, self.build_receiver(idx, receiver))
+        let receiver = self.build_receiver(idx, receiver);
+        if self.opaque {
+            Some(::syn::parse_quote! {{
+                let tmp = #receiver;
+                if !tmp.is_null() {
+                    *unsafe { Box::from_raw(tmp) };
+                }
+            }})
+        } else {
+            crate::types::switch(&self.ty).free(&self.ty, receiver)
+        }
     }
 
     fn build_receiver(&self, idx: usize, receiver: Option<&::syn::Expr>) -> ::syn::Expr {

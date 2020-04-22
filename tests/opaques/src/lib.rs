@@ -22,3 +22,26 @@ fn add_to_app_size(mut app: App, additional: u64) -> App {
 fn get_app_size(app: App) -> u64 {
     app.size
 }
+
+#[derive(FFIShim)]
+pub struct HideAndSeek {
+    lookatme: u64,
+    #[ffishim(opaque)]
+    hideme: u64,
+}
+
+#[ffishim_use_case]
+fn get_hideandseek() -> HideAndSeek {
+    HideAndSeek{lookatme: 2, hideme: 7}
+}
+
+#[ffishim_use_case]
+fn set_hidden_field(mut hs: HideAndSeek, to: u64) -> HideAndSeek {
+    hs.hideme = to;
+    hs
+}
+
+#[ffishim_use_case]
+fn get_hidden_field(hs: HideAndSeek) -> u64 {
+    hs.hideme
+}

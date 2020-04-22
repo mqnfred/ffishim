@@ -24,12 +24,12 @@ impl<'a> From<&'a crate::Data> for crate::News {
                         &orig_name,
                         &ffi_name,
                         variants,
-                        ),
-                    ::darling::ast::Data::Struct(fields) => vec![struct_new_func(
+                    ),
+                    ::darling::ast::Data::Struct(fields) => struct_new_func(
                         &orig_name,
                         &::syn::parse_quote! { #ffi_name },
                         fields,
-                        )],
+                    ).map(|new| vec![new]).unwrap_or_else(|| vec![]),
                 }
             }
         )
@@ -41,7 +41,7 @@ fn enum_new_funcs(
     ffi_name: &::syn::Ident,
     variants: &Vec<crate::Variant>,
 ) -> Vec<::syn::ItemFn> {
-    variants.iter().map(|v| {
+    variants.iter().filter_map(|v| {
         let variant_name = &v.ident;
         let orig_enum_variant_name = new_ident(&format!("{}{}", orig_name, variant_name));
         let ffi_name = ::syn::parse_quote! { #ffi_name::#variant_name };
@@ -53,29 +53,33 @@ fn struct_new_func(
     orig_name: &::syn::Ident,
     ffi_name: &::syn::Path,
     fields: &::darling::ast::Fields<crate::Field>,
-) -> ::syn::ItemFn {
-    let func_name = new_ident(&format!("new_{}", orig_name.to_string().to_snake_case()));
+) -> Option<::syn::ItemFn> {
+    if fields.iter().any(|field| field.opaque) {
+        None
+    } else {
+        let func_name = new_ident(&format!("new_{}", orig_name.to_string().to_snake_case()));
 
-    let field_decls: Vec<::syn::FnArg> = fields.iter().enumerate().map(|(idx, field)| {
-        let ident = field.ident.clone().unwrap_or_else(|| idx_to_name(idx as u32));
-        let ty = crate::types::switch(&field.ty).fold(field.ty.clone());
-        ::syn::parse_quote! { #ident: #ty }
-    }).collect();
+        let field_decls: Vec<::syn::FnArg> = fields.iter().enumerate().map(|(idx, field)| {
+            let ident = field.ident.clone().unwrap_or_else(|| idx_to_name(idx as u32));
+            let ty = crate::types::switch(&field.ty).fold(field.ty.clone());
+            ::syn::parse_quote! { #ident: #ty }
+        }).collect();
 
-    let field_names: Vec<::syn::Ident> = fields.iter().enumerate().map(|(idx, field)| {
-        field.ident.clone().unwrap_or_else(|| idx_to_name(idx as u32))
-    }).collect();
+        let field_names: Vec<::syn::Ident> = fields.iter().enumerate().map(|(idx, field)| {
+            field.ident.clone().unwrap_or_else(|| idx_to_name(idx as u32))
+        }).collect();
 
-    let init_expr: ::syn::Expr = match fields.style {
-        ::darling::ast::Style::Tuple => ::syn::parse_quote! { #ffi_name(#(#field_names),*) },
-        ::darling::ast::Style::Struct => ::syn::parse_quote! { #ffi_name{#(#field_names),*} },
-        ::darling::ast::Style::Unit => ::syn::parse_quote! { #ffi_name },
-    };
+        let init_expr: ::syn::Expr = match fields.style {
+            ::darling::ast::Style::Tuple => ::syn::parse_quote! { #ffi_name(#(#field_names),*) },
+            ::darling::ast::Style::Struct => ::syn::parse_quote! { #ffi_name{#(#field_names),*} },
+            ::darling::ast::Style::Unit => ::syn::parse_quote! { #ffi_name },
+        };
 
-    ::syn::parse_quote! {
-        #[no_mangle]
-        pub extern "C" fn #func_name(#(#field_decls),*) -> *mut #ffi_name {
-            Box::into_raw(Box::new(#init_expr))
-        }
+        Some(::syn::parse_quote! {
+            #[no_mangle]
+            pub extern "C" fn #func_name(#(#field_decls),*) -> *mut #ffi_name {
+                Box::into_raw(Box::new(#init_expr))
+            }
+        })
     }
 }

@@ -42,6 +42,9 @@ mod data;
 #[derive(Debug, FromField)]
 #[darling(attributes(ffishim))]
 pub struct Field {
+    #[darling(default)]
+    opaque: bool,
+
     ident: Option<::syn::Ident>,
     vis: ::syn::Visibility,
     ty: ::syn::Type,
