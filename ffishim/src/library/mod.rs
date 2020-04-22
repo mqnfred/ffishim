@@ -1,7 +1,8 @@
 //! Types to be used by the FFI shim in the target programs.
 //!
 //! The `library` contains all recurrent types that do not need to be generated, for example
-//! arrays. The generated shim code will refer to library types whenever necessary.
+//! the C-compatible "vectors." The generated shim code will refer to library types whenever
+//! necessary.
 //!
 //! We re-export rust's `libc` here to prevent users from having to declare libc as a direct
 //! dependency of their programs.
@@ -10,11 +11,10 @@ pub extern crate libc;
 extern crate anyhow;
 pub use anyhow::Error;
 
-/// A C-compatible array structure to replace rust's `Vec` in the shim layer.
+/// A C-compatible vector structure to replace rust's `Vec` in the shim layer.
 #[repr(C)]
 pub struct FFIVec<T> {
     // TODO: phantom market lifetime??
-    // TODO: usize ds la struct
     pub ptr: *mut T,
     pub len: usize,
     pub cap: usize,

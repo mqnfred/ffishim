@@ -1,5 +1,5 @@
 [package]
-name = "arrays"
+name = "vectors"
 version = "0.1.0"
 authors = ["Louis Feuvrier <mqnfred@gmail.com>"]
 edition = "2018"
@@ -11,5 +11,5 @@ ffishim = { path = "../../ffishim" }
 ffishim_derive = { path = "../../ffishim_derive" }
 
 [lib]
-name = "arrays"
+name = "vectors"
 crate-type = ["staticlib"]

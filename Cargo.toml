@@ -7,6 +7,6 @@ members = [
 	"tests/strings",
 	"tests/options",
 	"tests/structs",
-	"tests/arrays",
+	"tests/vectors",
 	"tests/opaques",
 ]
