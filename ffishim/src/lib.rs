@@ -99,9 +99,7 @@ mod try_into;
 ///
 /// This function can be called from the caller code to initialize a ffishim data structure
 /// elegantly, without having to resort to its own malloc.
-pub struct New {
-    new_funcs: Vec<::syn::ItemFn>,
-}
+pub struct News(Vec<::syn::ItemFn>);
 mod new;
 
 /// Derived from `Data` to generate the `free_name` function.

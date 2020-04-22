@@ -8,4 +8,5 @@ members = [
 	"tests/options",
 	"tests/structs",
 	"tests/arrays",
+	"tests/opaques",
 ]

@@ -9,6 +9,9 @@ impl ::quote::ToTokens for crate::Function {
         let call_expr = &self.call_expr;
 
         tokens.extend(::quote::quote! {
+            #[allow(unused_imports)]
+            use ::std::convert::TryInto as _;
+
             #[no_mangle]
             pub extern "C" fn #ffi_name(#(#ffi_args),*) #ffi_output {
                 #call_expr

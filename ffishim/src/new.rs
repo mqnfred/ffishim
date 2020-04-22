@@ -1,30 +1,38 @@
 use ::heck::SnakeCase;
 use crate::helpers::*;
 
-impl ::quote::ToTokens for crate::New {
+impl ::quote::ToTokens for crate::News {
     fn to_tokens(&self, tokens: &mut ::proc_macro2::TokenStream) {
-        let new_funcs = &self.new_funcs;
+        let new_funcs = &self.0;
         tokens.extend(::quote::quote! {
             #(#new_funcs)*
         });
     }
 }
 
-impl<'a> From<&'a crate::Data> for crate::New {
+impl<'a> From<&'a crate::Data> for crate::News {
     fn from(data: &'a crate::Data) -> Self {
-        let orig_name = &data.ident;
-        let ffi_name = orig_name.clone().prefix("FFI");
+        Self(
+            if data.opaque {
+                vec![]
+            } else {
+                let orig_name = &data.ident;
+                let ffi_name = orig_name.clone().prefix("FFI");
 
-        let new_funcs = match &data.data {
-            ::darling::ast::Data::Enum(variants) => enum_new_funcs(&orig_name, &ffi_name, variants),
-            ::darling::ast::Data::Struct(fields) => vec![struct_new_func(
-                &orig_name,
-                &::syn::parse_quote! { #ffi_name },
-                fields,
-            )],
-        };
-
-        Self{new_funcs}
+                match &data.data {
+                    ::darling::ast::Data::Enum(variants) => enum_new_funcs(
+                        &orig_name,
+                        &ffi_name,
+                        variants,
+                        ),
+                    ::darling::ast::Data::Struct(fields) => vec![struct_new_func(
+                        &orig_name,
+                        &::syn::parse_quote! { #ffi_name },
+                        fields,
+                        )],
+                }
+            }
+        )
     }
 }
 

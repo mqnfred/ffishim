@@ -10,6 +10,7 @@ Generate a thin FFI layer for your rust API using procedural macros.
  - Replace functions if `feature(ffishim)` instead of `ffi_` prefix
  - Reconsider dependence on `::anyhow::Error` explicitly
  - Implement opaque types/fields
+ - Rename arrays test to vectors
 
 ### Testing
 

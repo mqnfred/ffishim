@@ -27,16 +27,20 @@ impl<'a> From<&'a crate::Data> for crate::Free {
         let func_name = new_ident(&format!("free_{}", data.ident.to_string().to_snake_case()));
         let receiver = ::syn::parse_quote! { tmp };
         let ffi_type = ::syn::parse_quote! { *mut #ffi_name };
-        let free_expr = match &data.data {
-            ::darling::ast::Data::Enum(variants) => enum_free_expr(
-                &::syn::parse_quote! { #ffi_name },
-                &receiver,
-                variants,
-            ),
-            ::darling::ast::Data::Struct(fields) => struct_free_expr(
-                Some(&receiver),
-                fields,
-            ),
+        let free_expr = if data.opaque {
+            ::syn::parse_quote! { {} }
+        } else {
+            match &data.data {
+                ::darling::ast::Data::Enum(variants) => enum_free_expr(
+                    &::syn::parse_quote! { #ffi_name },
+                    &receiver,
+                    variants,
+                ),
+                ::darling::ast::Data::Struct(fields) => struct_free_expr(
+                    Some(&receiver),
+                    fields,
+                ),
+            }
         };
 
         Self{func_name, receiver, ffi_type, free_expr}

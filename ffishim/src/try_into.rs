@@ -25,19 +25,23 @@ impl<'a> From<&'a crate::Data> for crate::TryInto {
         let ffi_name = data.ident.clone().prefix("FFI");
         let receiver: ::syn::Expr = ::syn::parse_quote! { self };
 
-        let init_expr = match &data.data {
-            ::darling::ast::Data::Enum(variants) => enum_init_expr(
-                &::syn::parse_quote! { #orig_name },
-                &::syn::parse_quote! { #ffi_name },
-                &receiver,
-                variants,
-            ),
-            ::darling::ast::Data::Struct(fields) => struct_init_expr(
-                &::syn::parse_quote! { #orig_name },
-                &data.constructor,
-                Some(&receiver),
-                fields,
-            ),
+        let init_expr = if data.opaque {
+            ::syn::parse_quote! { Ok(#receiver.0) }
+        } else {
+            match &data.data {
+                ::darling::ast::Data::Enum(variants) => enum_init_expr(
+                    &::syn::parse_quote! { #orig_name },
+                    &::syn::parse_quote! { #ffi_name },
+                    &receiver,
+                    variants,
+                ),
+                ::darling::ast::Data::Struct(fields) => struct_init_expr(
+                    &::syn::parse_quote! { #orig_name },
+                    &data.constructor,
+                    Some(&receiver),
+                    fields,
+                ),
+            }
         };
 
         Self{orig_name, ffi_name, receiver, init_expr}

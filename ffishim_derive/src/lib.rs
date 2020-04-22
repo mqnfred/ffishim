@@ -9,20 +9,20 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
     let shim_data = ::ffishim::Data::from_derive_input(&derive_input).unwrap();
     let shim_from = ::ffishim::From::from(&shim_data);
     let shim_try_into = ::ffishim::TryInto::from(&shim_data);
-    let shim_new = ::ffishim::New::from(&shim_data);
+    let shim_news = ::ffishim::News::from(&shim_data);
     let shim_free = ::ffishim::Free::from(&shim_data);
 
     (::quote::quote! {
         #shim_data
         #shim_from
         #shim_try_into
-        #shim_new
+        #shim_news
         #shim_free
     }).into()
 }
 
 #[proc_macro_attribute]
-pub fn ffishim(
+pub fn ffishim_use_case(
     _: ::proc_macro::TokenStream,
     stream: ::proc_macro::TokenStream,
 ) -> ::proc_macro::TokenStream {

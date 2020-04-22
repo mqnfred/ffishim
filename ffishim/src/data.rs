@@ -4,9 +4,13 @@ impl ::quote::ToTokens for crate::Data {
     fn to_tokens(&self, tokens: &mut ::proc_macro2::TokenStream) {
         let ffi_name = self.ident.clone().prefix("FFI");
 
-        match &self.data {
-            ::darling::ast::Data::Struct(fds) => self.struct_to_tokens(ffi_name, fds, tokens),
-            ::darling::ast::Data::Enum(vars) => self.enum_to_tokens(ffi_name, vars, tokens),
+        if self.opaque {
+            self.opaque_to_tokens(ffi_name, tokens)
+        } else {
+            match &self.data {
+                ::darling::ast::Data::Struct(fds) => self.struct_to_tokens(ffi_name, fds, tokens),
+                ::darling::ast::Data::Enum(vars) => self.enum_to_tokens(ffi_name, vars, tokens),
+            }
         }
     }
 }
@@ -19,6 +23,13 @@ impl crate::Data {
             }
         }
         self
+    }
+
+    fn opaque_to_tokens(&self, ffi_name: ::syn::Ident, tokens: &mut ::proc_macro2::TokenStream) {
+        let orig_name = &self.ident;
+        tokens.extend(::quote::quote! {
+            pub struct #ffi_name(#orig_name);
+        });
     }
 
     fn enum_to_tokens(
