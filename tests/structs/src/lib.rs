@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate ffishim_derive;
+#[ffishim_library]
 
 #[derive(FFIShim)]
 pub struct Player {
