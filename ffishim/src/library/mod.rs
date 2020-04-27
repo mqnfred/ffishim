@@ -34,3 +34,4 @@ pub struct FFIResult<T> {
     pub payload: *mut T,
 }
 mod result;
+pub use result::free_result_function;

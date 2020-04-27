@@ -23,15 +23,25 @@ extern crate proc_macro2;
 /// It is also consumed by multiple other objects in this crate for generation of other critical
 /// logic (`From`, `TryInto` ...)
 #[derive(Debug, FromDeriveInput)]
-#[darling(attributes(ffishim), map = "Data::initialize")]
+#[darling(attributes(ffishim), map = "Data::validate")]
 pub struct Data {
+    /// Specify a constructor to construct the original data with when given the ffi form.
+    ///
+    /// Enumerations cannot expose constructors at the data-structure level, and must instead
+    /// expose them on a per-variant basis.
     #[darling(default)]
-    constructor: Option<::syn::Path>,
+    pub constructor: Option<::syn::Path>,
+    /// The ffi type will not expose any fields of this data structure, making it opaque.
+    ///
+    /// This is useful in case a data structure you have must be shared through the ffi, but it
+    /// cannot be represented/modeled in the other language, or it should not.
     #[darling(default)]
-    opaque: bool,
+    pub opaque: bool,
 
-    ident: ::syn::Ident,
-    data: ::darling::ast::Data<Variant, Field>,
+    /// The name of the data structure.
+    pub ident: ::syn::Ident,
+    /// The list of variants (for an enum) or fields (for a struct.)
+    pub data: ::darling::ast::Data<Variant, Field>,
 }
 mod data;
 
@@ -42,12 +52,19 @@ mod data;
 #[derive(Debug, FromField)]
 #[darling(attributes(ffishim))]
 pub struct Field {
+    /// This field will not be exposed as such and instead be replaced by a pointer to the value.
+    ///
+    /// This is useful in case a type you want to expose through the ffi holds one field that
+    /// cannot be represented/modeled in the other language, or it should not.
     #[darling(default)]
-    opaque: bool,
+    pub opaque: bool,
 
-    ident: Option<::syn::Ident>,
-    vis: ::syn::Visibility,
-    ty: ::syn::Type,
+    /// Name of the field (empty for tuple structs.)
+    pub ident: Option<::syn::Ident>,
+    /// Visibility of the given field. All ffi fields are public by default.
+    pub vis: ::syn::Visibility,
+    /// Type of the original field.
+    pub ty: ::syn::Type,
 }
 mod field;
 
@@ -58,11 +75,14 @@ mod field;
 #[derive(Debug, FromVariant)]
 #[darling(attributes(ffishim))]
 pub struct Variant {
+    /// For enumerations, constructor is controlled on a per-variant basis.
     #[darling(default)]
-    constructor: Option<::syn::Path>,
+    pub constructor: Option<::syn::Path>,
 
-    ident: ::syn::Ident,
-    fields: ::darling::ast::Fields<Field>,
+    /// Name of the variant.
+    pub ident: ::syn::Ident,
+    /// Fields of the variant (empty for unit variants.)
+    pub fields: ::darling::ast::Fields<Field>,
 }
 mod variant;
 
@@ -73,10 +93,10 @@ mod variant;
 /// in the rust code and return the FFI types back.
 #[derive(Debug)]
 pub struct Function {
-    ffi_name: ::syn::Ident,
-    ffi_args: Vec<::syn::FnArg>,
-    ffi_output: ::syn::ReturnType,
-    call_expr: ::syn::Expr,
+    pub ffi_name: ::syn::Ident,
+    pub ffi_args: Vec<::syn::FnArg>,
+    pub ffi_output: ::syn::ReturnType,
+    pub call_expr: ::syn::Expr,
 }
 mod function;
 

@@ -4,8 +4,7 @@ use ::syn::*;
 
 /// Builtin scalar behaviors: `f32`, `u32`, ...
 ///
-/// The behavior for different scalars is shared into this object. Here is the list of scalars and
-/// their libc equivalents:
+/// The behavior for different scalars is shared into this object. Here is the list of scalars:
 ///
 ///  - `f32`
 ///  - `f64`

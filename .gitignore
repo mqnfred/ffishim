@@ -1,5 +1,6 @@
 target
 Cargo.lock
+
 a.out
 actual_output
 success

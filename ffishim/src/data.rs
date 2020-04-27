@@ -16,7 +16,7 @@ impl ::quote::ToTokens for crate::Data {
 }
 
 impl crate::Data {
-    pub(crate) fn initialize(self) -> Self {
+    pub(crate) fn validate(self) -> Self {
         if let ::darling::ast::Data::Enum(_) = &self.data {
             if self.constructor.is_some() {
                 panic!("in enums, please specifies constructors per-variant");

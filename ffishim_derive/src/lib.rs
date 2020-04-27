@@ -1,4 +1,5 @@
 extern crate proc_macro;
+mod once;
 
 use ::darling::FromDeriveInput;
 
@@ -30,9 +31,13 @@ pub fn ffishim_use_case(
 
     let item_fn = ::syn::parse_macro_input!(stream as ::syn::ItemFn);
     let shim_function = ::ffishim::Function::from_item_fn(&item_fn);
+    let free_result_function = unsafe {
+        crate::once::defined_once("free_result", ::ffishim::library::free_result_function())
+    };
 
     (::quote::quote! {
         #original_function
         #shim_function
+        #free_result_function
     }).into()
 }
