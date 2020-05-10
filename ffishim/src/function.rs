@@ -13,6 +13,7 @@ impl ::quote::ToTokens for crate::Function {
             use ::std::convert::TryInto as _;
 
             #[no_mangle]
+            #[allow(unused_mut)]
             pub extern "C" fn #ffi_name(#(#ffi_args),*) #ffi_output {
                 #call_expr
             }

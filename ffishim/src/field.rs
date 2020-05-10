@@ -47,7 +47,7 @@ impl crate::Field {
             Some(::syn::parse_quote! {{
                 let tmp = #receiver;
                 if !tmp.is_null() {
-                    *unsafe { Box::from_raw(tmp) };
+                    unsafe { Box::from_raw(tmp) };
                 }
             }})
         } else {
