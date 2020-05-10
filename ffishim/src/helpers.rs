@@ -106,27 +106,31 @@ extend_syn_node! {
 }
 
 pub fn idx_to_name(idx: u32) -> ::syn::Ident {
+    new_ident(alpha_idx(idx))
+}
+
+pub fn alpha_idx(idx: u32) -> &'static str {
     match idx {
-        0 => new_ident("zero"),
-        1 => new_ident("one"),
-        2 => new_ident("two"),
-        3 => new_ident("three"),
-        4 => new_ident("four"),
-        5 => new_ident("five"),
-        6 => new_ident("six"),
-        7 => new_ident("seven"),
-        8 => new_ident("eight"),
-        9 => new_ident("nine"),
-        10 => new_ident("ten"),
-        11 => new_ident("eleven"),
-        12 => new_ident("twelve"),
-        13 => new_ident("thirteen"),
-        14 => new_ident("fourteen"),
-        15 => new_ident("fifteen"),
-        16 => new_ident("sixteen"),
-        17 => new_ident("seventeen"),
-        18 => new_ident("eighteen"),
-        19 => new_ident("nineteen"),
+        0 => "zero",
+        1 => "one",
+        2 => "two",
+        3 => "three",
+        4 => "four",
+        5 => "five",
+        6 => "six",
+        7 => "seven",
+        8 => "eight",
+        9 => "nine",
+        10 => "ten",
+        11 => "eleven",
+        12 => "twelve",
+        13 => "thirteen",
+        14 => "fourteen",
+        15 => "fifteen",
+        16 => "sixteen",
+        17 => "seventeen",
+        18 => "eighteen",
+        19 => "nineteen",
         _ => panic!("does not support more than 20 tuple struct fields"),
     }
 }
