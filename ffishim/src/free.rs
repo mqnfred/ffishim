@@ -68,7 +68,9 @@ fn enum_free_expr(
             ::darling::ast::Style::Struct => ::syn::parse_quote! {
                 #ffi_variant_fullpath{#(#destructuring),*} => #free_expr
             },
-            ::darling::ast::Style::Unit => ::syn::parse_quote! { {} },
+            ::darling::ast::Style::Unit => ::syn::parse_quote! {
+                #ffi_variant_fullpath => {}
+            },
         }
     }).collect();
 

@@ -9,4 +9,5 @@ members = [
 	"tests/structs",
 	"tests/vectors",
 	"tests/opaques",
+	"tests/enums",
 ]

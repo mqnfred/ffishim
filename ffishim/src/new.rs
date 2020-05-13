@@ -28,6 +28,7 @@ impl<'a> From<&'a crate::Data> for crate::News {
                     ::darling::ast::Data::Struct(fields) => struct_new_func(
                         &orig_name,
                         &::syn::parse_quote! { #ffi_name },
+                        None,
                         fields,
                     ).map(|new| vec![new]).unwrap_or_else(|| vec![]),
                 }
@@ -42,16 +43,19 @@ fn enum_new_funcs(
     variants: &Vec<crate::Variant>,
 ) -> Vec<::syn::ItemFn> {
     variants.iter().filter_map(|v| {
-        let variant_name = &v.ident;
-        let orig_enum_variant_name = new_ident(&format!("{}{}", orig_name, variant_name));
-        let ffi_name = ::syn::parse_quote! { #ffi_name::#variant_name };
-        struct_new_func(&orig_enum_variant_name, &ffi_name, &v.fields)
+        let variant_ident = &v.ident;
+        let orig_enum_variant_name = new_ident(&format!("{}{}", orig_name, variant_ident));
+
+        let ffi_path = ::syn::parse_quote!{ #ffi_name };
+        let variant_path = ::syn::parse_quote!{ #variant_ident };
+        struct_new_func(&orig_enum_variant_name, &ffi_path, Some(&variant_path), &v.fields)
     }).collect()
 }
 
 fn struct_new_func(
     orig_name: &::syn::Ident,
     ffi_name: &::syn::Path,
+    variant_path: Option<&::syn::Path>,
     fields: &::darling::ast::Fields<crate::Field>,
 ) -> Option<::syn::ItemFn> {
     if fields.iter().any(|field| field.opaque) {
@@ -69,10 +73,18 @@ fn struct_new_func(
             field.ident.clone().unwrap_or_else(|| idx_to_name(idx as u32))
         }).collect();
 
+        let variant_ts: Option<::proc_macro2::TokenStream> = variant_path.map(|vn| {
+            ::quote::quote! { ::#vn }
+        });
+
         let init_expr: ::syn::Expr = match fields.style {
-            ::darling::ast::Style::Tuple => ::syn::parse_quote! { #ffi_name(#(#field_names),*) },
-            ::darling::ast::Style::Struct => ::syn::parse_quote! { #ffi_name{#(#field_names),*} },
-            ::darling::ast::Style::Unit => ::syn::parse_quote! { #ffi_name },
+            ::darling::ast::Style::Tuple => ::syn::parse_quote! {
+                #ffi_name#variant_ts(#(#field_names),*)
+            },
+            ::darling::ast::Style::Struct => ::syn::parse_quote! {
+                #ffi_name#variant_ts{#(#field_names),*}
+            },
+            ::darling::ast::Style::Unit => ::syn::parse_quote! { #ffi_name#variant_ts },
         };
 
         Some(::syn::parse_quote! {
