@@ -13,13 +13,13 @@
 //! |`Option<T>`|`*mut T`|
 //! |`Vec<T>`|`ffishim::library::FFIVec<T>`|
 //! |`Result<T, E>`|`ffishim::library::FFIResult<T>`|
-//! |`bool`|`libc::c_int`|
-//! |`char`|`libc::c_char`|
 //!
 //! And below a list of all the scalar types handled (see the `Scalars` behavior for more details.)
 //!
 //! |Scalar types|FFI equivalent|
 //! |---|---|
+//! |`bool`|`libc::c_char`|
+//! |`char`|`libc::c_uint`|
 //! |`f32`|`libc::c_float`|
 //! |`f64`|`libc::c_double`|
 //! |`u8`|`libc::c_char`|
@@ -77,6 +77,7 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
     vec![
         // End-types
         Box::new(Scalars),
+        Box::new(Bool),
         Box::new(String),
 
         // Parameterized types
@@ -92,6 +93,8 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
 // End-types
 mod scalars;
 pub use scalars::Behavior as Scalars;
+mod bool;
+pub use self::bool::Behavior as Bool;
 mod string;
 pub use string::Behavior as String;
 

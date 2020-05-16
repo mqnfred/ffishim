@@ -15,6 +15,7 @@ Generate a thin FFI layer for your rust API using procedural macros.
 
  - Add a "complete" test/example situation
  - Design benchmarking strategy and framework
+ - Add test of enums
 
 ### Documentation
 
