@@ -53,12 +53,20 @@ impl crate::Data {
         fields: &::darling::ast::Fields<crate::Field>,
         tokens: &mut ::proc_macro2::TokenStream,
     ) {
-        let fields: Vec<::syn::Field> = fields.iter().map(|f| f.fold()).collect();
-        tokens.extend(::quote::quote! {
-            #[repr(C)]
-            pub struct #ffi_name {
-                #(#fields),*
-            }
+        let ffi_fields: Vec<::syn::Field> = fields.iter().map(|f| f.fold()).collect();
+        tokens.extend(match fields.style {
+            ::darling::ast::Style::Tuple => ::quote::quote! {
+                #[repr(C)]
+                pub struct #ffi_name(#(#ffi_fields),*);
+            },
+            ::darling::ast::Style::Struct => ::quote::quote! {
+                #[repr(C)]
+                pub struct #ffi_name { #(#ffi_fields),* }
+            },
+            ::darling::ast::Style::Unit => ::quote::quote! {
+                #[repr(C)]
+                pub struct #ffi_name;
+            },
         });
     }
 }

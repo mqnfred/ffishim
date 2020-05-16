@@ -32,3 +32,12 @@ fn get_player_1() -> Player {
         },
     }
 }
+
+#[derive(FFIShim)]
+pub struct Coordinates(i64, i64);
+
+#[ffishim_use_case]
+fn set_x(mut coord: Coordinates, x: i64) -> Coordinates {
+    coord.0 = x;
+    coord
+}
