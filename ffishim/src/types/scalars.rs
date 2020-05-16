@@ -23,7 +23,6 @@ pub struct Behavior;
 
 static NUMBER_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
-    m.insert("char", "::ffishim::library::libc::c_uint");
     m.insert("f32", "::ffishim::library::libc::c_float");
     m.insert("f64", "::ffishim::library::libc::c_double");
     m.insert("u8", "::ffishim::library::libc::c_char");
