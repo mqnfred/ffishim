@@ -18,7 +18,7 @@ impl super::Behavior for Behavior {
     }
 
     fn try_into(&self, _sty: &Type, expr: Expr) -> Expr {
-        parse_quote! { if #expr == 0 { false } else { true } }
+        parse_quote! { Ok(if #expr == 0 { false } else { true }) }
     }
 
     fn from(&self, _sty: &Type, expr: Expr) -> Expr {

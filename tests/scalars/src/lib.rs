@@ -20,3 +20,8 @@ fn fails(a: i64) -> Result<i64, ::ffishim::library::Error> {
         Err(::ffishim::library::Error::msg("only 5 accepted"))
     }
 }
+
+#[ffishim_use_case]
+fn not(a: bool) -> bool {
+    !a
+}
