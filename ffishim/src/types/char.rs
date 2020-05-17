@@ -18,11 +18,15 @@ impl super::Behavior for Behavior {
     }
 
     fn try_into(&self, _sty: &Type, expr: Expr) -> Expr {
-        parse_quote! { Ok(#expr as ::ffishim::library::libc::c_uint) }
+        parse_quote! {
+            ::std::char::from_u32(#expr).ok_or_else(|| {
+                ::ffishim::library::Error::msg("invalid rust 'char' encountered on ffi boundary")
+            })
+        }
     }
 
     fn from(&self, _sty: &Type, expr: Expr) -> Expr {
-        parse_quote! { (#expr as char) }
+        parse_quote! { #expr as u32 }
     }
 
     fn free(&self, _sty: &Type, _expr: Expr) -> Option<Expr> {
