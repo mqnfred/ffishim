@@ -40,7 +40,7 @@ impl crate::Data {
     ) {
         let variants: Vec<_> = variants.iter().map(|v| v.fold()).collect();
         tokens.extend(::quote::quote! {
-            #[repr(C, u16)]
+            #[repr(u16)]
             pub enum #ffi_name {
                 #(#variants),*
             }

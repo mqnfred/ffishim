@@ -69,7 +69,7 @@ fn enum_init_expr(
                 #orig_variant_fullpath{#(#destructuring),*} => #init
             },
             ::darling::ast::Style::Unit => ::syn::parse_quote! {
-                #orig_variant_fullpath => #ffi_variant_fullpath,
+                #orig_variant_fullpath => #ffi_variant_fullpath
             },
         }
     }).collect();
