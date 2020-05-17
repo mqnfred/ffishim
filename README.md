@@ -11,6 +11,7 @@ Generate a thin FFI layer for your rust API using procedural macros.
  - `from` should become `try_from`? (invalid rust string -> CString unsafe)
  - Replace functions if `feature(ffishim)` instead of `ffi_` prefix
  - Reconsider dependence on `::anyhow::Error` explicitly
+ - Type behavior for chrono dates
 
 ### Testing
 
