@@ -28,12 +28,12 @@ static NUMBER_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     m.insert("u8", "::ffishim::library::libc::c_char");
     m.insert("u16", "::ffishim::library::libc::c_ushort");
     m.insert("u32", "::ffishim::library::libc::c_uint");
-    m.insert("u64", "::ffishim::library::libc::c_ulong");
+    m.insert("u64", "u64");
     m.insert("usize", "::ffishim::library::libc::size_t");
     m.insert("i8", "::ffishim::library::libc::c_schar");
     m.insert("i16", "::ffishim::library::libc::c_short");
     m.insert("i32", "::ffishim::library::libc::c_int");
-    m.insert("i64", "::ffishim::library::libc::c_long");
+    m.insert("i64", "i64");
     m.insert("isize", "::ffishim::library::libc::ssize_t");
     m
 });

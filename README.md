@@ -6,6 +6,8 @@ Generate a thin FFI layer for your rust API using procedural macros.
 
 ### Bugs
 
+ - The scalars type to libc types should either refer only libc types or none
+
 ### Features
 
  - `from` should become `try_from`? (invalid rust string -> CString unsafe)

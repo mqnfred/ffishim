@@ -18,7 +18,7 @@ impl super::Behavior for Behavior {
     }
 
     fn fold(&self, _: Type) -> Type {
-        parse_quote! { *mut i8 }
+        parse_quote! { *mut ::ffishim::library::libc::c_char }
     }
 
     fn try_into(&self, _: &Type, expr: Expr) -> Expr {
