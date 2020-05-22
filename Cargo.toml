@@ -10,4 +10,5 @@ members = [
 	"tests/vectors",
 	"tests/opaques",
 	"tests/enums",
+	"tests/references",
 ]

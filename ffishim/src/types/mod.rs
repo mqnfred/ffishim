@@ -85,6 +85,7 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
         Box::new(Option),
         Box::new(Result),
         Box::new(Vector),
+        Box::new(Reference),
 
         // Foreign/custom types implementing an ffi shim
         Box::new(Foreign),
@@ -108,6 +109,8 @@ mod result;
 pub use result::Behavior as Result;
 mod vec;
 pub use vec::Behavior as Vector;
+mod reference;
+pub use reference::Behavior as Reference;
 
 // Foreign/custom types implementing an ffi shim
 mod foreign;

@@ -4,7 +4,7 @@
 #include "../../ffishim/header.h"
 #include "../helpers.h"
 
-typedef void *app_t;
+typedef void app_t;
 extern void *free_app(app_t *app);
 extern result_t *ffi_add_to_app_size(app_t *app, uint64_t additional);
 extern result_t *ffi_get_app_size(app_t *app);
