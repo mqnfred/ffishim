@@ -14,13 +14,13 @@ impl super::Behavior for Behavior {
     }
 
     fn fold(&self, sty: Type) -> Type {
-        let subtype = inner_type_path(&sty);
+        let subtype = inner_type(&sty);
         let ffi_subtype = crate::types::switch(subtype).fold(subtype.clone());
         parse_quote! { #ffi_subtype }
     }
 
     fn try_into(&self, sty: &Type, expr: Expr) -> Expr {
-        if let Type::Path(mut tp) = inner_type_path(&sty).clone() {
+        if let Type::Path(mut tp) = inner_type(&sty).clone() {
             let seg = tp.path.segments.last_mut().expect(">0 segments");
             seg.ident = seg.ident.clone().prefix("FFI");
             parse_quote! {{
@@ -41,7 +41,7 @@ impl super::Behavior for Behavior {
     }
 }
 
-fn inner_type_path(sty: &Type) -> &Type {
+fn inner_type(sty: &Type) -> &Type {
     if let Type::Reference(r) = sty {
         &*r.elem
     } else {
