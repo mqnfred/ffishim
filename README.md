@@ -7,6 +7,8 @@ Generate a thin FFI layer for your rust API using procedural macros.
 ### Bugs
 
  - The scalars type to libc types should either refer only libc types or none
+ - Name conflicts arise across crates in .so: for example the function name
+   `free_config` if there is a `Config` struct in 2 crates. Need name mangling
 
 ### Features
 
