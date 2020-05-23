@@ -18,7 +18,11 @@ impl super::Behavior for Behavior {
     }
 
     fn try_into(&self, _sty: &Type, expr: Expr) -> Expr {
-        parse_quote! { Ok(::chrono::Duration::milliseconds(#expr)) }
+        parse_quote! {{
+            let tmp = ::chrono::Duration::milliseconds(#expr);
+            let tmp: Result<_, ::ffishim::library::Error> = Ok(tmp);
+            tmp
+        }}
     }
 
     fn from(&self, _sty: &Type, expr: Expr) -> Expr {
