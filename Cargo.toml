@@ -11,4 +11,5 @@ members = [
 	"tests/opaques",
 	"tests/enums",
 	"tests/references",
+	"tests/timing",
 ]

@@ -13,6 +13,7 @@
 //! |`Option<T>`|`*mut T`|
 //! |`Vec<T>`|`ffishim::library::FFIVec<T>`|
 //! |`Result<T, E>`|`ffishim::library::FFIResult<T>`|
+//! |`chrono::Duration`|`libc::c_long`|
 //!
 //! And below a list of all the scalar types handled (see the `Scalars` behavior for more details.)
 //!
@@ -79,6 +80,7 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
         Box::new(Scalars),
         Box::new(Bool),
         Box::new(Char),
+        Box::new(Duration),
         Box::new(String),
 
         // Parameterized types
@@ -99,6 +101,8 @@ mod bool;
 pub use self::bool::Behavior as Bool;
 mod char;
 pub use self::char::Behavior as Char;
+mod duration;
+pub use duration::Behavior as Duration;
 mod string;
 pub use string::Behavior as String;
 
