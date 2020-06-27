@@ -3,10 +3,10 @@
 Many common rust types (like `String` for example) cannot be sent over FFI
 because their layouts in memory do not match the C ABI (`String` does not have
 a null byte at its end.) It makes it hard to use native rust types and call
-that code from an FFI.
+that code from FFI.
 
-This crate provides an ffi shim which will expose FFI-compatible data
-structures and function wrappers for every native rust type and function.
+This crate provides a shim which will expose FFI-compatible data structures and
+function wrappers for native rust types and functions.
 
 Here is a quick example of rust code using a native `String` and calling that
 from C:
@@ -42,6 +42,12 @@ int main() {
 }
 ```
 
+This will print:
+
+```
+Hello, ffi!
+```
+
 Since some type transformations might fail, the functions always return a
 `result_t` type, which contains a pointer to an error message and a payload. In
 case of an error, the payload is nil and the message contains the error string.
@@ -58,6 +64,16 @@ You can find more examples of the shim's behavior by looking at the
 
 Every test crate is a stand-alone app, it will provide you with the options
 required to build the library (cdylib) etc.
+
+## C ABI Disclaimer
+
+This crate does not currently generate C ABI-compatible bindings. This is
+because it has been designed to be used together with [dustr][2], which
+generates Dart bindings on top of this ffi shim.
+
+Because dart ffi support is still in alpha, it cannot quite consume the C ABI
+just yet. For example, [it does not support nested structs][3], and [structures
+cannot be passed by value to functions][4].
 
 ## TODO/Limitations
 
@@ -88,3 +104,6 @@ This crate is still in beta. It is not fit for production use yet.
  - Write `ffishim_derive` documentation on how to use macros
 
 [1]: tests/
+[2]: https://github.com/mqnfred/dustr
+[3]: https://github.com/dart-lang/sdk/issues/37271
+[4]: https://github.com/dart-lang/sdk/issues/41062
