@@ -14,7 +14,7 @@ edition = "2018"
 
 [dependencies]
 darling = "^0"
-ffishim = { path = "../ffishim" }
+ffishim = "0.1.0"
 proc-macro2 = "^1"
 syn = "^1"
 quote = "^1"

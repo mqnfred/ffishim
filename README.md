@@ -1,5 +1,8 @@
 # FFIShim
 
+[![crates.io](https://img.shields.io/crates/v/ffishim_derive)](https://crates.io/ffishim_derive)
+[![badge](https://docs.rs/ffishim_derive/badge.svg)](https://docs.rs/ffishim_derive/)
+
 Many common rust types (like `String` for example) cannot be sent over FFI
 because their layouts in memory do not match the C ABI (`String` does not have
 a null byte at its end.) It makes it hard to use native rust types and call
