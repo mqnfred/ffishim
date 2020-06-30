@@ -41,7 +41,6 @@ EOF
 cat > ${dir}/src/lib.rs <<EOF
 #[macro_use]
 extern crate ffishim_derive;
-#[ffishim_library]
 
 #[ffishim_use_case]
 fn add(a: i64, b: i64) -> i64 {
