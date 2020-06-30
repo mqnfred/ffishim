@@ -148,6 +148,11 @@ pub fn is_same_id(path: &Path, id: &str) -> bool {
         .to_string()
 }
 
+/// `TokenStream` which, when executed, sets the allocator to a known default.
+///
+/// This is useful to ensure we use the same allocator as the system allocator. The data moving
+/// across the FFI boundary sees its ownership move along with it. Some pieces of the host system
+/// might need to allocate/free chunks of data it is passing to the rust library.
 pub fn shim_allocator_setting() -> ::proc_macro2::TokenStream {
     ::quote::quote! {
         use ::std::alloc::System as FFISystem;
