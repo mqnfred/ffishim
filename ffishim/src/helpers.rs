@@ -1,4 +1,4 @@
-use ::syn::*;
+use syn::*;
 
 /// This macro can be used to add functionality to some nodes in the `syn` AST.
 ///
@@ -140,5 +140,18 @@ pub fn new_ident(src: &str) -> Ident {
 }
 
 pub fn is_same_id(path: &Path, id: &str) -> bool {
-    id == &path.segments.last().expect("always >1 segments").ident.to_string()
+    id == &path
+        .segments
+        .last()
+        .expect("always >1 segments")
+        .ident
+        .to_string()
+}
+
+pub fn shim_allocator_setting() -> ::proc_macro2::TokenStream {
+    ::quote::quote! {
+        use ::std::alloc::System as FFISystem;
+        #[global_allocator]
+        static GLOBAL: FFISystem = FFISystem;
+    }
 }

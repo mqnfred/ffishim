@@ -75,6 +75,9 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
     let shim_try_into = ::ffishim::TryInto::from(&shim_data);
     let shim_news = ::ffishim::News::from(&shim_data);
     let shim_free = ::ffishim::Free::from(&shim_data);
+    let shim_allocator_setting = unsafe {
+        crate::once::defined_once("shim_allocator_setting", ::ffishim::shim_allocator_setting())
+    };
 
     (::quote::quote! {
         #shim_data
@@ -82,6 +85,7 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
         #shim_try_into
         #shim_news
         #shim_free
+        #shim_allocator_setting
     }).into()
 }
 
