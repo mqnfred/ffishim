@@ -55,15 +55,15 @@ case of an error, the payload is nil and the message contains the error string.
 ## More examples
 
 You can find more examples of the shim's behavior by looking at the
-[`tests`][1] folder. The structure of the tests are as follow:
+[`tests`][1] folder. The structure of the tests is as follow:
 
  - `src/lib.rs`: the rust library to expose
  - `Cargo.toml`: manifest of the rust library
  - `main.c`: the C code that uses this rust library
  - `expected_output`: contains the output expected from running the C program
 
-Every test crate is a stand-alone app, it will provide you with the options
-required to build the library (cdylib) etc.
+Every test crate is a stand-alone app leveraging the ffishim library. They will
+shed light on how to setup the library and use it.
 
 ## C ABI Disclaimer
 
