@@ -143,4 +143,3 @@ pub mod types;
 /// Macros to extend the `syn` tree and other useful shortcuts.
 #[macro_use]
 mod helpers;
-pub use helpers::alloc_setting;

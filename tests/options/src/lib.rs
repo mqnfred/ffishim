@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate ffishim_derive;
-#[ffishim_library]
 
 #[ffishim_use_case]
 fn give_option() -> Option<u32> {

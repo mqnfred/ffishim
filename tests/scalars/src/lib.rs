@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate ffishim_derive;
-#[ffishim_library]
 
 #[ffishim_use_case]
 fn add_i64(a: i64, b: i64) -> i64 {

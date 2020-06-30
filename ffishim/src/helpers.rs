@@ -142,12 +142,3 @@ pub fn new_ident(src: &str) -> Ident {
 pub fn is_same_id(path: &Path, id: &str) -> bool {
     id == &path.segments.last().expect("always >1 segments").ident.to_string()
 }
-
-pub fn alloc_setting() -> ::proc_macro2::TokenStream {
-    ::quote::quote! {
-        use ::std::alloc::System;
-
-        #[global_allocator]
-        static GLOBAL: System = System;
-    }
-}
