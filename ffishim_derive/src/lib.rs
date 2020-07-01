@@ -65,7 +65,7 @@ use ::darling::FromDeriveInput;
 /// [4]: https://dart.dev/guides/libraries/c-interop
 /// [5]: https://github.com/dart-lang/sdk/issues/37271
 /// [6]: https://github.com/dart-lang/sdk/issues/41062
-/// [7]: https://docs.rs/ffishim/0.1.1/ffishim/types/index.html
+/// [7]: https://docs.rs/ffishim/0.1.2/ffishim/types/index.html
 #[proc_macro_derive(FFIShim, attributes(ffishim))]
 pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenStream {
     let derive_input = ::syn::parse_macro_input!(stream as ::syn::DeriveInput);
@@ -124,7 +124,7 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
 /// [1]: derive.FFIShim.html
 /// [2]: https://dart.dev/guides/libraries/c-interop
 /// [3]: https://github.com/dart-lang/sdk/issues/41062
-/// [4]: https://docs.rs/ffishim/0.1.1/ffishim/types/index.html
+/// [4]: https://docs.rs/ffishim/0.1.2/ffishim/types/index.html
 #[proc_macro_attribute]
 pub fn ffishim_function(
     _: ::proc_macro::TokenStream,
