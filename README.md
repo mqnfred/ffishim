@@ -15,7 +15,7 @@ Here is a quick example of rust code using a native `String` and calling that
 from C:
 
 ```rust
-#[ffishim_use_case]
+#[ffishim_function]
 fn hello(s: String) -> String {
     format!("Hello, {}!", s)
 }

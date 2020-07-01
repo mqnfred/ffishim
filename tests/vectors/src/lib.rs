@@ -7,7 +7,7 @@ pub struct GPS {
     lon: f64,
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn push_gps(mut coordinates: Vec<GPS>, gps: GPS) -> Vec<GPS> {
     coordinates.push(gps);
     coordinates
@@ -19,7 +19,7 @@ pub struct Player {
     points: Vec<u64>,
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn player_sum_points(p: Player) -> u64 {
     let a = p.points.iter().sum();
     a

@@ -15,7 +15,7 @@ use ::darling::FromDeriveInput;
 ///
 /// An implementation of `from` and `try_into` is provided for `FFIMyStruct`, which can be used
 /// for back-and-forth "translation." These translations are executed whenever `MyStruct` is passed
-/// to or returned from an [`ffishim_use_case`][3], the macro which generates stubs around our
+/// to or returned from an [`ffishim_function`][3], the macro which generates stubs around our
 /// functions. You should never have to deal with `FFIMyStruct` yourself at any time.
 ///
 /// # C ABI Violation: embedded structs
@@ -61,7 +61,7 @@ use ::darling::FromDeriveInput;
 ///
 /// [1]: https://doc.rust-lang.org/std/ffi/struct.CString.html
 /// [2]: https://doc.rust-lang.org/std/string/struct.String.html
-/// [3]: attr.ffishim_use_case.html
+/// [3]: attr.ffishim_function.html
 /// [4]: https://dart.dev/guides/libraries/c-interop
 /// [5]: https://github.com/dart-lang/sdk/issues/37271
 /// [6]: https://github.com/dart-lang/sdk/issues/41062
@@ -126,7 +126,7 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
 /// [3]: https://github.com/dart-lang/sdk/issues/41062
 /// [4]: https://docs.rs/ffishim/0.1.1/ffishim/types/index.html
 #[proc_macro_attribute]
-pub fn ffishim_use_case(
+pub fn ffishim_function(
     _: ::proc_macro::TokenStream,
     stream: ::proc_macro::TokenStream,
 ) -> ::proc_macro::TokenStream {

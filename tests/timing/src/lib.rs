@@ -6,7 +6,7 @@ pub struct WorldRecord {
     time: ::chrono::Duration,
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn get_duration() -> ::chrono::Duration {
     ::chrono::Duration::seconds(5)
 }

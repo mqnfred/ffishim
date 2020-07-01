@@ -14,13 +14,13 @@ pub struct GPS {
     lon: f64,
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn set_player_lat(mut p: Player, lat: f64) -> Player {
     p.coordinates.lat = lat;
     p
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn get_player_1() -> Player {
     Player{
         name: "lyz".to_owned(),
@@ -35,7 +35,7 @@ fn get_player_1() -> Player {
 #[derive(FFIShim)]
 pub struct Coordinates(i64, i64);
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn set_x(mut coord: Coordinates, x: i64) -> Coordinates {
     coord.0 = x;
     coord
