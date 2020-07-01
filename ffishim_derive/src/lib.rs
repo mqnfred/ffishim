@@ -20,7 +20,7 @@ use ::darling::FromDeriveInput;
 ///
 /// # C ABI Violation: embedded structs
 ///
-/// Aside from built-in types, nothing is directly embedded in the struct, it is dereferenced
+/// Aside from scalar types, nothing is directly embedded in the struct, it is dereferenced
 /// behind a pointer. This is because this project is originally written to work with Dart's [new
 /// alpha ffi][4], and this version alpha [does not support embeded structures yet][5].
 ///
