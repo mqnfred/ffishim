@@ -1,7 +1,6 @@
 extern crate proc_macro;
-mod once;
 
-use ::darling::FromDeriveInput;
+use darling::FromDeriveInput;
 
 /// Mark a structure for use across the ffi boundary.
 ///
@@ -75,9 +74,6 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
     let shim_try_into = ::ffishim::TryInto::from(&shim_data);
     let shim_news = ::ffishim::News::from(&shim_data);
     let shim_free = ::ffishim::Free::from(&shim_data);
-    let shim_allocator_setting = unsafe {
-        crate::once::defined_once("shim_allocator_setting", ::ffishim::shim_allocator_setting())
-    };
 
     (::quote::quote! {
         #shim_data
@@ -85,8 +81,8 @@ pub fn derive_ffishim(stream: ::proc_macro::TokenStream) -> ::proc_macro::TokenS
         #shim_try_into
         #shim_news
         #shim_free
-        #shim_allocator_setting
-    }).into()
+    })
+    .into()
 }
 
 /// Mark a function for use across the ffi boundary.
@@ -134,13 +130,27 @@ pub fn ffishim_function(
 
     let item_fn = ::syn::parse_macro_input!(stream as ::syn::ItemFn);
     let shim_function = ::ffishim::Function::from_item_fn(&item_fn);
-    let free_result_function = unsafe {
-        crate::once::defined_once("free_result", ::ffishim::library::free_result_function())
-    };
 
     (::quote::quote! {
         #original_function
         #shim_function
+    })
+    .into()
+}
+
+#[proc_macro_attribute]
+pub fn ffishim_library(
+    _: ::proc_macro::TokenStream,
+    stream: ::proc_macro::TokenStream,
+) -> ::proc_macro::TokenStream {
+    let stream: ::proc_macro2::TokenStream = stream.into();
+    let shim_alloc_setting = ::ffishim::shim_allocator_setting();
+    let free_result_function = ::ffishim::library::free_result_function();
+
+    (::quote::quote! {
+        #stream
+        #shim_alloc_setting
         #free_result_function
-    }).into()
+    })
+    .into()
 }

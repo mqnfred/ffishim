@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate ffishim_derive;
 
+#[ffishim_library]
+mod ffishim_library {}
+
 #[ffishim_function]
 fn give_option() -> Option<u32> {
     Some(28)

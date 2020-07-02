@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate ffishim_derive;
 
+#[ffishim_library]
+mod ffishim_library {}
+
 #[derive(FFIShim)]
 pub struct GPS {
     lat: f64,
