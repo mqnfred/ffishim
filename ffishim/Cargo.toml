@@ -2,7 +2,7 @@
 name = "ffishim"
 description = "Library behind ffishim_derive"
 keywords = ["ffi", "bindings", "c"]
-categories = ["external-ffi-bindings"]
+categories = ["development-tools::ffi"]
 authors = ["Louis Feuvrier <mqnfred@gmail.com>"]
 repository = "https://github.com/mqnfred/ffishim"
 license = "MIT OR Apache-2.0"
