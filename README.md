@@ -1,6 +1,6 @@
 # FFIShim
 
-[![crates.io](https://img.shields.io/crates/v/ffishim_derive)](https://crates.io/ffishim_derive)
+[![crates.io](https://img.shields.io/crates/v/ffishim_derive)](https://crates.io/crates/ffishim_derive)
 [![badge](https://docs.rs/ffishim_derive/badge.svg)](https://docs.rs/ffishim_derive/)
 
 Many common rust types (like `String` for example) cannot be sent over FFI
